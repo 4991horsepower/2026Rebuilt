@@ -1,6 +1,7 @@
 package frc.robot;
 
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
+import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 
 public final class Constants {
     public static final class DebugConstants
@@ -58,6 +59,20 @@ public final class Constants {
         public static final double intakekD = 0.00;
 
         public static final int intakeRunSpeed = 0;
+    }
+
+    public static final class SpindexerConstants{
+        public static final int spinCanID = 0;
+
+        public static final double spinkP = 0;
+        public static final double spinkI = 0;
+        public static final double spinkD = 0;
+
+        public static final double spinVoltage = 0;
+
+        public static final boolean spinInverted = false;
+
+        public static final IdleMode spinIdleMode = IdleMode.kCoast;
     }
 
 
