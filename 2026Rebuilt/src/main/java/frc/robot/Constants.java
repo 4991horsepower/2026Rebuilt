@@ -1,5 +1,7 @@
 package frc.robot;
 
+import com.ctre.phoenix6.configs.TalonFXConfiguration;
+
 public final class Constants {
     public static final class DebugConstants
     {
@@ -18,6 +20,8 @@ public final class Constants {
         public static final double hoodkI = 0.00;
         public static final double hoodkD = 0.00;
 
+        public static final int kHoodGearRatio = 144;//Motor Rotations to Hood Rotations
+
         //Shooter Motor
         public static final int shooterCANID = 0;
         
@@ -26,6 +30,14 @@ public final class Constants {
         public static final double shooterkD = 0.00;
 
         public static final int shooterShotSpeed = 0;
+
+        //Limits
+        public static final double maxHoodAngle = 60; //Degrees From Horizontal
+        public static final double minHoodAngle = 15; //Degrees From Horizontal
+
+        //Error
+        public static final double kHoodMaxAllPosErr = 0.1; //Motor Rotations
+        public static final double kShooterMaxAllVelErr = 10; //RPM
     }
 
     public static final class TurretConstants{
