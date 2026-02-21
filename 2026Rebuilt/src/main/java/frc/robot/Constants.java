@@ -75,5 +75,14 @@ public final class Constants {
         public static final IdleMode spinIdleMode = IdleMode.kCoast;
     }
 
+    public static final class UptakeConstants{
+        public static final int upCANID = 0;
+
+        public static final double upkP = 0;
+        public static final double upkI = 0;
+        public static final double upkD = 0;
+
+        public static final double uptakeVolt = 0;
+    }
 
 }

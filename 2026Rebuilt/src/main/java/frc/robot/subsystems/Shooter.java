@@ -74,7 +74,7 @@ public class Shooter extends SubsystemBase {
        }
 
        public void setTargetingMode(int mode){
-        //Mode 0 is no targeting, Mode 1 Hub Tracking, Mode 2 Player Station Wall Tracking
+        //Mode 0 is no targeting, Mode 1 Hub Tracking Based on Position, Mode 2 Hub Tracking Based on April Tags, Mode 3 Player Station Wall Tracking
         setMode = mode;
        }
 
