@@ -58,15 +58,28 @@ public final class Constants {
         public static final double intakekI = 0.00;
         public static final double intakekD = 0.00;
 
-        public static final int intakeRunSpeed = 0;
+        public static final int linearCANID = 0;
+
+        public static final boolean linInverted = false;
+        
+        public static final IdleMode linIdleMode = IdleMode.kBrake;
+
+        public static final double linkP = 0.00;
+        public static final double linkI = 0.00;
+        public static final double linkD = 0.00;
+
+        public static final double intakeRunVolt = 0;
+
+        public static final double intakeOutPos = 0;
+        public static final double intakeInPos = 0;
     }
 
     public static final class SpindexerConstants{
         public static final int spinCanID = 0;
 
-        public static final double spinkP = 0;
-        public static final double spinkI = 0;
-        public static final double spinkD = 0;
+        public static final double spinkP = 0.00;
+        public static final double spinkI = 0.00;
+        public static final double spinkD = 0.00;
 
         public static final double spinVoltage = 0;
 
@@ -78,9 +91,9 @@ public final class Constants {
     public static final class UptakeConstants{
         public static final int upCANID = 0;
 
-        public static final double upkP = 0;
-        public static final double upkI = 0;
-        public static final double upkD = 0;
+        public static final double upkP = 0.00;
+        public static final double upkI = 0.00;
+        public static final double upkD = 0.00;
 
         public static final double uptakeVolt = 0;
     }
