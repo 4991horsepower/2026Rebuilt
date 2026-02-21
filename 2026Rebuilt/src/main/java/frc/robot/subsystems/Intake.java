@@ -72,6 +72,6 @@ public class Intake extends SubsystemBase {
     public void setIntakeVolts(double volts){
         setVolts = volts;
 
-        m_InMotor.setVoltage(volts);
+        m_InMotor.setVoltage(setVolts);
     }
 }

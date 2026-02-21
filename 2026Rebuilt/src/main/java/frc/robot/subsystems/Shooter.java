@@ -5,13 +5,9 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.DebugConstants;
 import frc.robot.Constants.ShooterConstants;
 
-import org.ejml.sparse.csc.mult.MatrixVectorMultWithSemiRing_DSCC;
-
-import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.ctre.phoenix6.configs.SlotConfigs;
 import com.ctre.phoenix6.configs.TalonFXConfigurator;
 import com.ctre.phoenix6.hardware.TalonFX;
-import com.ctre.phoenix6.hardware.TalonFXS;
 
 
 public class Shooter extends SubsystemBase {

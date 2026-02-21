@@ -1,7 +1,6 @@
 package frc.robot.subsystems;
 
 import com.ctre.phoenix6.configs.SlotConfigs;
-import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.configs.TalonFXConfigurator;
 import com.ctre.phoenix6.hardware.TalonFX;
 
@@ -32,9 +31,13 @@ public class Uptake extends SubsystemBase {
 
     public void setVoltage(double volts){
         setVolts = volts;
+
+        m_Uptake.setVoltage(setVolts);
     }
 
     public void stop(){
         setVolts = 0;
+        
+        m_Uptake.setVoltage(setVolts);
     }
 }
