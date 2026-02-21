@@ -10,6 +10,7 @@ import com.revrobotics.PersistMode;
 import com.revrobotics.ResetMode;
 import com.revrobotics.spark.SparkClosedLoopController;
 import com.revrobotics.spark.SparkFlex;
+import com.revrobotics.spark.SparkBase.ControlType;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.config.SparkMaxConfig;
 
@@ -58,5 +59,19 @@ public class Intake extends SubsystemBase {
 
         m_InConfigurator.apply(m_InConfigs);
         m_Linear.configure(m_LinearConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+    }
+
+    public void setIntakePosition(double pos){
+        if(pos > IntakeConstants.intakeOutPos) {setPos = IntakeConstants.intakeOutPos;}
+        else if(pos < IntakeConstants.intakeInPos) {setPos = IntakeConstants.intakeInPos;}
+        else{setPos = pos;}
+
+        m_LinearController.setSetpoint(setPos, ControlType.kPosition);
+    }
+
+    public void setIntakeVolts(double volts){
+        setVolts = volts;
+
+        m_InMotor.setVoltage(volts);
     }
 }

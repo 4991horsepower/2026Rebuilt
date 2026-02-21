@@ -57,20 +57,24 @@ public class Shooter extends SubsystemBase {
     }
     @Override
        public void periodic(){
+        //If the Shooter is active and at speed send true to SmartDashboard
+        SmartDashboard.putBoolean("Ready to Fire", isShooterAtSpeed() && setShooterSpeed > 0);
        }
 
         //Setters
        public void setHoodAngle(double hoodAngle){
         //if inputed angle is within bounds set desired hood angle as input otherwise set as closet allowed angle
-            if(hoodAngle > ShooterConstants.maxHoodAngle) {setHoodAngle = ShooterConstants.maxHoodAngle;}
-            else if(hoodAngle < ShooterConstants.minHoodAngle) {setHoodAngle = ShooterConstants.minHoodAngle;}
-            else setHoodAngle = hoodAngle;
+            if(hoodAngle > ShooterConstants.maxHoodAngle) {setHoodAngle = ShooterConstants.maxHoodAngle * ShooterConstants.kHoodGearRatio;}
+            else if(hoodAngle < ShooterConstants.minHoodAngle) {setHoodAngle = ShooterConstants.minHoodAngle * ShooterConstants.kHoodGearRatio;}
+            else setHoodAngle = hoodAngle * ShooterConstants.kHoodGearRatio;
             //Needs Converted from Angle to Motor Rotations
-            m_Hood.setPosition(hoodAngle * ShooterConstants.kHoodGearRatio);
+            m_Hood.setPosition(setHoodAngle);
        }
 
        public void setShooterSpeed(double speed){
             setShooterSpeed = speed;
+
+            m_Wheel.set(setShooterSpeed);
        }
 
        public void setTargetingMode(int mode){
@@ -81,6 +85,8 @@ public class Shooter extends SubsystemBase {
        //Stops
        public void stopHood(){
         setHoodAngle = m_Hood.getPosition().getValueAsDouble();
+
+        m_Hood.setPosition(setHoodAngle);
        }
 
        //Getters

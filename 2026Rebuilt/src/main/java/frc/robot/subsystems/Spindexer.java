@@ -19,7 +19,7 @@ public class Spindexer extends SubsystemBase {
 
     private SparkMaxConfig m_SpinConfig;
 
-    private double setSpinSpeed = 0;
+    private double setSpinVolt = 0;
 
     public Spindexer(){
         m_Spin = new SparkFlex(SpindexerConstants.spinCanID, MotorType.kBrushless);
@@ -42,12 +42,16 @@ public class Spindexer extends SubsystemBase {
         m_Spin.configure(m_SpinConfig, ResetMode.kResetSafeParameters,PersistMode.kPersistParameters);
     }
 
-    public void setSpeed(double speed){
-        setSpinSpeed = speed;
+    public void setVolts(double volt){
+        setSpinVolt = volt;
+
+        m_Spin.setVoltage(setSpinVolt);
     }
 
     public void stop(){
-        setSpinSpeed = 0;
+        setSpinVolt = 0;
+
+        m_Spin.setVoltage(setSpinVolt);
     }
     
 }
