@@ -25,7 +25,6 @@ public class Shooter extends SubsystemBase {
 
     private double setHoodAngle = 0;
     private double setShooterSpeed = 0;
-    private double setMode = 0;
 
     public Shooter(){
         m_Hood = new TalonFX(ShooterConstants.hoodCANID);
@@ -75,11 +74,6 @@ public class Shooter extends SubsystemBase {
             setShooterSpeed = speed;
 
             m_Wheel.set(setShooterSpeed);
-       }
-
-       public void setTargetingMode(int mode){
-        //Mode 0 is no targeting, Mode 1 Hub Tracking Based on Position, Mode 2 Hub Tracking Based on April Tags, Mode 3 Player Station Wall Tracking
-        setMode = mode;
        }
 
        //Stops

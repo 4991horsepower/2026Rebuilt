@@ -1,6 +1,5 @@
 package frc.robot;
 
-import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 
 public final class Constants {
@@ -48,6 +47,8 @@ public final class Constants {
         public static final double turretkP = 0.00;
         public static final double turretkI = 0.00;
         public static final double turretkD = 0.00;
+
+        public static final double turretGearRatio = 462; //Motor Rotations to Turret Rotations
     }
 
     public static final class IntakeConstants{
@@ -97,5 +98,4 @@ public final class Constants {
 
         public static final double uptakeVolt = 0;
     }
-
 }
