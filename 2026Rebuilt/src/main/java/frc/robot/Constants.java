@@ -34,6 +34,9 @@ public final class Constants {
         //Limits
         public static final double maxHoodAngle = 60; //Degrees From Horizontal
         public static final double minHoodAngle = 15; //Degrees From Horizontal
+        public static final double hoodZeroAngle = 60; //Degrees from Horizontal
+
+        public static final double hoodHomingVolts = 2;
 
         //Error
         public static final double kHoodMaxAllPosErr = 0.1; //Motor Rotations
