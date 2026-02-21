@@ -76,6 +76,8 @@ public final class Constants {
 
         public static final double intakeOutPos = 0;
         public static final double intakeInPos = 0;
+
+        public static final double intakeMaxAllErr = .1;
     }
 
     public static final class SpindexerConstants{

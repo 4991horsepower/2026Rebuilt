@@ -7,6 +7,7 @@ import com.ctre.phoenix6.configs.SlotConfigs;
 import com.ctre.phoenix6.configs.TalonFXConfigurator;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.revrobotics.PersistMode;
+import com.revrobotics.RelativeEncoder;
 import com.revrobotics.ResetMode;
 import com.revrobotics.spark.SparkClosedLoopController;
 import com.revrobotics.spark.SparkFlex;
@@ -28,6 +29,8 @@ public class Intake extends SubsystemBase {
 
     private final SparkMaxConfig m_LinearConfig;
 
+    private final RelativeEncoder m_LinEncoder;
+
     private double setVolts = 0;
     private double setPos = 0;
     
@@ -43,6 +46,8 @@ public class Intake extends SubsystemBase {
         m_LinearController = m_Linear.getClosedLoopController();
 
         m_LinearConfig = new SparkMaxConfig();
+
+        m_LinEncoder = m_Linear.getEncoder();
 
         m_InConfigs.kP = IntakeConstants.intakekP;
         m_InConfigs.kI = IntakeConstants.intakekI;
@@ -73,5 +78,9 @@ public class Intake extends SubsystemBase {
         setVolts = volts;
 
         m_InMotor.setVoltage(setVolts);
+    }
+
+    public boolean getDone(){
+        return  Math.abs(m_LinEncoder.getPosition() - setPos) < IntakeConstants.intakeMaxAllErr;
     }
 }
