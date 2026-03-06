@@ -14,7 +14,7 @@ public final class Constants {
 
     public static final class ShooterConstants{
         //Hood Motor
-        public static final int hoodCANID = 0;
+        public static final int hoodCANID = 6;
 
         public static final double hoodkP = 0.01;
         public static final double hoodkI = 0.00;
@@ -23,7 +23,7 @@ public final class Constants {
         public static final int kHoodGearRatio = 144;//Motor Rotations to Hood Rotations
 
         //Shooter Motor
-        public static final int shooterCANID = 0;
+        public static final int shooterCANID = 7;
         
         public static final double shooterkP = 0.01;
         public static final double shooterkI = 0.00;
@@ -45,7 +45,7 @@ public final class Constants {
 
     public static final class TurretConstants{
         //Turret Motor
-        public static final int turretCANID = 0;
+        public static final int turretCANID = 5;
 
         public static final double turretkP = 0.00;
         public static final double turretkI = 0.00;
@@ -56,13 +56,13 @@ public final class Constants {
 
     public static final class IntakeConstants{
         //Intake Motor
-        public static final int intakeCANID = 0;
+        public static final int intakeCANID = 1;
         
         public static final double intakekP = 0.00;
         public static final double intakekI = 0.00;
         public static final double intakekD = 0.00;
 
-        public static final int linearCANID = 0;
+        public static final int linearCANID = 2;
 
         public static final boolean linInverted = false;
         
@@ -81,7 +81,7 @@ public final class Constants {
     }
 
     public static final class SpindexerConstants{
-        public static final int spinCanID = 0;
+        public static final int spinCanID = 3;
 
         public static final double spinkP = 0.00;
         public static final double spinkI = 0.00;
@@ -95,7 +95,7 @@ public final class Constants {
     }
 
     public static final class UptakeConstants{
-        public static final int upCANID = 0;
+        public static final int upCANID = 4;
 
         public static final double upkP = 0.00;
         public static final double upkI = 0.00;

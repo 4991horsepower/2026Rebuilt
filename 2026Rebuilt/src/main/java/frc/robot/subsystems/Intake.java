@@ -80,6 +80,10 @@ public class Intake extends SubsystemBase {
         m_InMotor.setVoltage(setVolts);
     }
 
+    public void stopWheels(){
+        m_InMotor.setVoltage(0);
+    }
+
     public boolean getDone(){
         return  Math.abs(m_LinEncoder.getPosition() - setPos) < IntakeConstants.intakeMaxAllErr;
     }
