@@ -30,14 +30,8 @@ public class Spindexer extends SubsystemBase {
         m_SpinConfig
             .inverted(SpindexerConstants.spinInverted)
             .smartCurrentLimit(60)
-            .idleMode(SpindexerConstants.spinIdleMode)
-            .closedLoop
-            .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
-            .pid(
-                    SpindexerConstants.spinkP,
-                    SpindexerConstants.spinkI,
-                    SpindexerConstants.spinkD
-                );
+            .idleMode(SpindexerConstants.spinIdleMode);
+
         m_Spin.configure(m_SpinConfig, ResetMode.kResetSafeParameters,PersistMode.kPersistParameters);
     }
 

@@ -48,15 +48,20 @@ public class Shooter extends SubsystemBase {
         m_HoodConfigurator = m_Hood.getConfigurator();
         m_WheelConfigurator = m_Wheel.getConfigurator();
 
-        m_hoodConfigs = new SlotConfigs();
-        m_wheelConfigs = new SlotConfigs();
+        m_hoodConfigs = new SlotConfigs()
+        .withKP(ShooterConstants.hoodkP)
+        .withKI(ShooterConstants.hoodkI)
+        .withKD(ShooterConstants.hoodkD);
+        
+        m_wheelConfigs = new SlotConfigs()
+        .withKP(ShooterConstants.shooterkP)
+        .withKI(ShooterConstants.shooterkI)
+        .withKD(ShooterConstants.shooterkD);
+
 
         positionRequest = new PositionDutyCycle(setHoodAngle);
         speedRequest = new VelocityDutyCycle(setShooterSpeed);
 
-        m_hoodConfigs.kP = ShooterConstants.hoodkP;
-        m_hoodConfigs.kI = ShooterConstants.hoodkI;
-        m_hoodConfigs.kD = ShooterConstants.hoodkD; 
         
         m_HoodConfigurator.apply(m_hoodConfigs);
         m_WheelConfigurator.apply(m_wheelConfigs);

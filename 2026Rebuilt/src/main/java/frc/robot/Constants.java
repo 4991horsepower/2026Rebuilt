@@ -47,7 +47,7 @@ public final class Constants {
         //Turret Motor
         public static final int turretCANID = 5;
 
-        public static final double turretkP = 0.00;
+        public static final double turretkP = 0.01;
         public static final double turretkI = 0.00;
         public static final double turretkD = 0.00;
 
@@ -57,24 +57,22 @@ public final class Constants {
     public static final class IntakeConstants{
         //Intake Motor
         public static final int intakeCANID = 1;
-        
-        public static final double intakekP = 0.00;
-        public static final double intakekI = 0.00;
-        public static final double intakekD = 0.00;
 
         public static final int linearCANID = 2;
+
+        public static final boolean intakeInverted = false;
 
         public static final boolean linInverted = false;
         
         public static final IdleMode linIdleMode = IdleMode.kBrake;
 
-        public static final double linkP = 0.00;
+        public static final double linkP = 0.01;
         public static final double linkI = 0.00;
         public static final double linkD = 0.00;
 
         public static final double intakeRunVolt = 0;
 
-        public static final double intakeOutPos = 0;
+        public static final double intakeOutPos = 60; //~75 set lower for tuning
         public static final double intakeInPos = 0;
 
         public static final double intakeMaxAllErr = .1;
@@ -83,11 +81,7 @@ public final class Constants {
     public static final class SpindexerConstants{
         public static final int spinCanID = 3;
 
-        public static final double spinkP = 0.00;
-        public static final double spinkI = 0.00;
-        public static final double spinkD = 0.00;
-
-        public static final double spinVoltage = 0;
+        public static final double spinVoltage = 4;
 
         public static final boolean spinInverted = false;
 
@@ -97,10 +91,8 @@ public final class Constants {
     public static final class UptakeConstants{
         public static final int upCANID = 4;
 
-        public static final double upkP = 0.00;
-        public static final double upkI = 0.00;
-        public static final double upkD = 0.00;
+        public static final double uptakeVolt = 4;
 
-        public static final double uptakeVolt = 0;
+        public static final boolean UpInverted = false;
     }
 }

@@ -49,10 +49,6 @@ public class Intake extends SubsystemBase {
 
         m_LinEncoder = m_Linear.getEncoder();
 
-        m_InConfigs.kP = IntakeConstants.intakekP;
-        m_InConfigs.kI = IntakeConstants.intakekI;
-        m_InConfigs.kD = IntakeConstants.intakekD;
-
         m_LinearConfig
         .inverted(IntakeConstants.linInverted)
         .idleMode(IntakeConstants.linIdleMode)

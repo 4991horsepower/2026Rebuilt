@@ -22,10 +22,6 @@ public class Uptake extends SubsystemBase {
 
         m_UptakeConfig = new SlotConfigs();
 
-        m_UptakeConfig.kP = UptakeConstants.upkP;
-        m_UptakeConfig.kI = UptakeConstants.upkI;
-        m_UptakeConfig.kD = UptakeConstants.upkD;
-
         m_UptakeConfigurator.apply(m_UptakeConfig);
     }
 
