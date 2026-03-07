@@ -2,10 +2,13 @@ package frc.robot.subsystems;
 
 
 
+import java.util.function.Supplier;
+
 import com.ctre.phoenix6.configs.SlotConfigs;
 import com.ctre.phoenix6.configs.TalonFXSConfigurator;
 import com.ctre.phoenix6.hardware.TalonFXS;
 
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
@@ -21,7 +24,9 @@ public class Turret extends SubsystemBase {
 
     private double setTurretAngle = 0;
 
-    public Turret(){
+    private Supplier<Pose2d> m_poseSupplier;
+
+    public Turret(Supplier<Pose2d> poseSupplier){
         m_Turret = new TalonFXS(TurretConstants.turretCANID);
 
         m_TurretConfigurator = m_Turret.getConfigurator();
@@ -33,6 +38,12 @@ public class Turret extends SubsystemBase {
         m_TurretConfig.kD = TurretConstants.turretkD;
 
         m_TurretConfigurator.apply(m_TurretConfig);
+
+        m_poseSupplier = poseSupplier;
+        }
+
+        public void periodic(){
+            
         }
 
         public void setTurretAngle(double angle){

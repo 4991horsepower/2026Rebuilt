@@ -11,6 +11,22 @@ public final class Constants {
 
        
     }
+    public static final class AimingConstants{
+        public static final double edgeOfShootingArea = 0;//Feet From Origin // Splits field accross bump for decidng if aiming for hub or at player wall
+
+        public static final double MidFieldSplit = 0;//Feet from origin //Splits Neutral Zone for detirmining if aiming at left or right side of hub
+
+        public static final double hubX = 0; //X Cord of Hub
+        public static final double hubY = 0; //Y Cord of Hub
+        public static final double hubZ = 72; //Z Offset for aiming at hub
+
+        public static final double playerWallY = 0; //Y Cord of player wall target for better reliablity
+
+        public static final double playerWallLeft = 0; //X cord of left side target
+        public static final double playerWallRight = 0; //X cord of right side target
+
+
+    }
 
     public static final class ShooterConstants{
         //Hood Motor
