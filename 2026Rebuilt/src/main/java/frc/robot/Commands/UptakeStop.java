@@ -14,6 +14,6 @@ public class UptakeStop extends Command {
 
     @Override 
     public void execute() {
-        m_up.setVoltage(0);
+        m_up.setSpeed(0);
     }
 }

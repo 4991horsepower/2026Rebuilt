@@ -53,8 +53,8 @@ public class RobotContainer {
   private final Intake m_intake = new Intake();
   private final Spindexer m_Spindexer = new Spindexer();
   private final Uptake m_Uptake = new Uptake();
-  private final Turret m_Turret = new Turret(m_Drive.getPoseSupplier());
-  private final Shooter m_Shooter = new Shooter(m_Drive.getPoseSupplier());
+  //private final Turret m_Turret = new Turret(m_Drive.getPoseSupplier());
+  //private final Shooter m_Shooter = new Shooter(m_Drive.getPoseSupplier());
 
 
   public RobotContainer() {
@@ -102,7 +102,7 @@ public class RobotContainer {
         m_CopilotController.b().onChange(new IntakeIn(m_intake));
 
         //Shooter Controls
-        m_CopilotController.start().onChange(new stopShooter(m_Shooter));
+        //m_CopilotController.start().onChange(new stopShooter(m_Shooter));
 
         //While trigger is held fire balls
         m_CopilotController.leftTrigger(.5)

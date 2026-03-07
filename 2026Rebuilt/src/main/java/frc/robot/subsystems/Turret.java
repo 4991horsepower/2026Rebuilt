@@ -9,6 +9,8 @@ import com.ctre.phoenix6.configs.TalonFXSConfigurator;
 import com.ctre.phoenix6.hardware.TalonFXS;
 
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
@@ -24,7 +26,9 @@ public class Turret extends SubsystemBase {
 
     private double setTurretAngle = 0;
 
-    private Supplier<Pose2d> m_poseSupplier;
+    private final Supplier<Pose2d> m_poseSupplier;
+
+    private Translation2d m_TurretPosition;
 
     public Turret(Supplier<Pose2d> poseSupplier){
         m_Turret = new TalonFXS(TurretConstants.turretCANID);
@@ -40,10 +44,11 @@ public class Turret extends SubsystemBase {
         m_TurretConfigurator.apply(m_TurretConfig);
 
         m_poseSupplier = poseSupplier;
+
         }
 
         public void periodic(){
-            
+
         }
 
         public void setTurretAngle(double angle){
@@ -55,6 +60,11 @@ public class Turret extends SubsystemBase {
             
             //Sets Turret position to the converted angle
             m_Turret.setPosition(Units.degreesToRotations(setTurretAngle) * TurretConstants.turretGearRatio);
+        }
+
+        //Set the target for the turret to track
+        public void setTarget(Translation2d target){
+            //m_target = target;
         }
 
         public double getTurretAngle(){

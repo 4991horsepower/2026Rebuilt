@@ -14,6 +14,6 @@ public class UptakeUp extends Command {
 
     @Override 
     public void execute() {
-        m_up.setVoltage(UptakeConstants.uptakeVolt);
+        m_up.setSpeed(UptakeConstants.uptakeSpeed);
     }
 }

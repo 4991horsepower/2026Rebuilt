@@ -3,7 +3,7 @@ package frc.robot.subsystems;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.IntakeConstants;
 
-import com.ctre.phoenix6.configs.SlotConfigs;
+import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.configs.TalonFXConfigurator;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.revrobotics.PersistMode;
@@ -21,7 +21,7 @@ public class Intake extends SubsystemBase {
 
     private final TalonFXConfigurator m_InConfigurator;
 
-    private final SlotConfigs m_InConfigs;
+    private final Slot0Configs m_InConfigs;
 
     private final SparkFlex m_Linear;
 
@@ -31,7 +31,7 @@ public class Intake extends SubsystemBase {
 
     private final RelativeEncoder m_LinEncoder;
 
-    private double setVolts = 0;
+    private double setSpeed = 0;
     private double setPos = 0;
     
     public Intake(){
@@ -39,7 +39,11 @@ public class Intake extends SubsystemBase {
 
         m_InConfigurator = m_InMotor.getConfigurator();
 
-        m_InConfigs = new SlotConfigs();
+        m_InConfigs = new Slot0Configs()
+            .withKP(IntakeConstants.inkP)
+            .withKI(IntakeConstants.inkI)
+            .withKD(IntakeConstants.inkD)
+            .withKV(IntakeConstants.inkV);
 
         m_Linear = new SparkFlex(IntakeConstants.linearCANID, MotorType.kBrushless);
 
@@ -58,6 +62,8 @@ public class Intake extends SubsystemBase {
             IntakeConstants.linkD
         );
 
+        m_LinearConfig.encoder.inverted(IntakeConstants.linInverted);
+
         m_InConfigurator.apply(m_InConfigs);
         m_Linear.configure(m_LinearConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
     }
@@ -70,14 +76,13 @@ public class Intake extends SubsystemBase {
         m_LinearController.setSetpoint(setPos, ControlType.kPosition);
     }
 
-    public void setIntakeVolts(double volts){
-        setVolts = volts;
-
-        m_InMotor.setVoltage(setVolts);
+    public void setIntakeSpeed(double speed){
+        setSpeed = speed;
+        m_InMotor.set(setSpeed);
     }
 
     public void stopWheels(){
-        m_InMotor.setVoltage(0);
+        setIntakeSpeed(0);
     }
 
     public boolean getDone(){

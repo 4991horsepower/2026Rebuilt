@@ -16,6 +16,6 @@ public class SpindexerStop extends Command {
 
     @Override
     public void execute() {
-        m_Spindexer.setVolts(0);
+        m_Spindexer.setSpeed(0);
     }
 }

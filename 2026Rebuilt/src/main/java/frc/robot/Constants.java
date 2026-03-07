@@ -2,6 +2,8 @@ package frc.robot;
 
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 
+import edu.wpi.first.math.geometry.Translation3d;
+
 public final class Constants {
     public static final class DebugConstants
     {
@@ -16,9 +18,10 @@ public final class Constants {
 
         public static final double MidFieldSplit = 0;//Feet from origin //Splits Neutral Zone for detirmining if aiming at left or right side of hub
 
-        public static final double hubX = 0; //X Cord of Hub
-        public static final double hubY = 0; //Y Cord of Hub
-        public static final double hubZ = 72; //Z Offset for aiming at hub
+        public static final Translation3d hub = new Translation3d(
+            0,
+            0,
+            72); //X Cord of Hub
 
         public static final double playerWallY = 0; //Y Cord of player wall target for better reliablity
 
@@ -78,17 +81,22 @@ public final class Constants {
 
         public static final boolean intakeInverted = false;
 
-        public static final boolean linInverted = false;
+        public static final boolean linInverted = true;
         
         public static final IdleMode linIdleMode = IdleMode.kBrake;
 
-        public static final double linkP = 0.01;
+        public static final double linkP = 0.3;
         public static final double linkI = 0.00;
-        public static final double linkD = 0.00;
+        public static final double linkD = 1;
+
+        public static final double inkP = 6;
+        public static final double inkI = 0;
+        public static final double inkD = 0;
+        public static final double inkV = 1;
 
         public static final double intakeRunVolt = 0;
 
-        public static final double intakeOutPos = 60; //~75 set lower for tuning
+        public static final double intakeOutPos = 56.5;
         public static final double intakeInPos = 0;
 
         public static final double intakeMaxAllErr = .1;
@@ -97,18 +105,29 @@ public final class Constants {
     public static final class SpindexerConstants{
         public static final int spinCanID = 3;
 
-        public static final double spinVoltage = 4;
+        public static final double spinkP = 0.00007;
+        public static final double spinkI = 0.0;
+        public static final double spinkD = 0.01;
+        public static final double spinkV = 0.002;
 
         public static final boolean spinInverted = false;
 
         public static final IdleMode spinIdleMode = IdleMode.kCoast;
+
+        public static final double spinSpeed = 2000;
     }
 
     public static final class UptakeConstants{
         public static final int upCANID = 4;
 
-        public static final double uptakeVolt = 4;
+        public static final double upkP = 1;
+        public static final double upkI = 0;
+        public static final double upkD = 0;
+        public static final double upkS = 28;
+        public static final double upkV = 0.17;
 
         public static final boolean UpInverted = false;
+
+        public static final double uptakeSpeed = 2000;
     }
 }

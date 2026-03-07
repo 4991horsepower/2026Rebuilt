@@ -16,6 +16,6 @@ public class SpindexerDrive extends Command {
 
     @Override
     public void execute() {
-        m_Spindexer.setVolts(SpindexerConstants.spinVoltage);
+        m_Spindexer.setSpeed(SpindexerConstants.spinSpeed);
     }
 }
