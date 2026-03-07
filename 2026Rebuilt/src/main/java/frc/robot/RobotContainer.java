@@ -18,6 +18,7 @@ import static edu.wpi.first.units.Units.RadiansPerSecond;
 import static edu.wpi.first.units.Units.RotationsPerSecond;
 
 import com.ctre.phoenix6.swerve.SwerveRequest;
+import com.ctre.phoenix6.swerve.SwerveDrivetrain.SwerveDriveState;
 import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
@@ -52,8 +53,8 @@ public class RobotContainer {
   private final Intake m_intake = new Intake();
   private final Spindexer m_Spindexer = new Spindexer();
   private final Uptake m_Uptake = new Uptake();
-  private final Turret m_Turret = new Turret(m_Drive.getPigeon2().g);
-  private final Shooter m_Shooter = new Shooter();
+  private final Turret m_Turret = new Turret(m_Drive.getPoseSupplier());
+  private final Shooter m_Shooter = new Shooter(m_Drive.getPoseSupplier());
 
 
   public RobotContainer() {

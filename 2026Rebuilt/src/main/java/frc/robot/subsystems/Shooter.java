@@ -1,5 +1,8 @@
 package frc.robot.subsystems;
 
+import java.util.function.Supplier;
+
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.units.measure.Velocity;
 import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -21,6 +24,8 @@ public class Shooter extends SubsystemBase {
     private final TalonFX m_Hood;
     private final TalonFX m_Wheel;
 
+    private final Supplier<Pose2d> m_PoseSupplier;
+
     private final SlotConfigs m_hoodConfigs;
     private final SlotConfigs m_wheelConfigs;
     private final TalonFXConfigurator m_HoodConfigurator;
@@ -37,8 +42,8 @@ public class Shooter extends SubsystemBase {
     private boolean isHoming = false;
     private boolean wasResetByLimit = false;
 
-    public Shooter(){
-        
+    public Shooter(Supplier<Pose2d> poseSupplier){
+        m_PoseSupplier = poseSupplier;
 
         m_Hood = new TalonFX(ShooterConstants.hoodCANID);
         m_Wheel = new TalonFX(ShooterConstants.shooterCANID);

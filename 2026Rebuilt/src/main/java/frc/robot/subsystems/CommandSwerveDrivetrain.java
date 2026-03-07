@@ -267,6 +267,13 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         return m_sysIdRoutineToApply.dynamic(direction);
     }
 
+    public Supplier<Pose2d> getPoseSupplier(){
+        return () -> {
+            SwerveDriveState state = this.getState();
+            return state.Pose;
+        };
+    }
+
     @Override
     public void periodic() {
         /*
