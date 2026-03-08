@@ -1,6 +1,9 @@
 package frc.robot.subsystems;
 
 import com.ctre.phoenix6.configs.TalonFXConfigurator;
+import com.ctre.phoenix6.controls.ControlRequest;
+import com.ctre.phoenix6.controls.PositionVoltage;
+import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.configs.Slot0Configs;
 
@@ -12,6 +15,8 @@ public class Uptake extends SubsystemBase {
     private final TalonFXConfigurator m_UptakeConfigurator;
 
     private final Slot0Configs m_UptakeConfig;
+
+    private VelocityVoltage speedRequest;
 
     private double setSpeed = 0;
 
@@ -28,12 +33,14 @@ public class Uptake extends SubsystemBase {
             .withKV(UptakeConstants.upkV);
 
         m_UptakeConfigurator.apply(m_UptakeConfig);
+
+        speedRequest = new VelocityVoltage(setSpeed);
     }
 
     public void setSpeed(double speed){
         setSpeed = speed;
 
-        m_Uptake.setVoltage(setSpeed);
+        m_Uptake.setControl(speedRequest.withVelocity(setSpeed));
     }
 
     public void stop(){

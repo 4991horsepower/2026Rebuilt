@@ -1,20 +1,29 @@
 package frc.robot.subsystems;
 
+import static edu.wpi.first.units.Units.MetersPerSecondPerSecond;
+
 import java.util.function.Supplier;
 
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation3d;
+import edu.wpi.first.math.geometry.proto.Translation2dProto;
+import edu.wpi.first.units.Units;
 import edu.wpi.first.units.measure.Velocity;
 import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.DebugConstants;
 import frc.robot.Constants.ShooterConstants;
+import frc.robot.Constants.AimingConstants;
 
 import com.ctre.phoenix6.configs.SlotConfigs;
 import com.ctre.phoenix6.configs.TalonFXConfigurator;
 import com.ctre.phoenix6.controls.ControlRequest;
 import com.ctre.phoenix6.controls.PositionDutyCycle;
+import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.controls.VelocityDutyCycle;
+import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.revrobotics.spark.SparkBase.ControlType;
@@ -36,11 +45,17 @@ public class Shooter extends SubsystemBase {
     private double setHoodAngle = 0;
     private double setShooterSpeed = 0;
 
-    private PositionDutyCycle positionRequest; 
-    private VelocityDutyCycle speedRequest;
+    private PositionVoltage positionRequest; 
+    private VelocityVoltage speedRequest;
 
     private boolean isHoming = false;
     private boolean wasResetByLimit = false;
+
+    private Translation3d target = AimingConstants.hub;
+
+    private Pose2d robotRelativeToTarget = new Pose2d();
+    private double distance = 0;
+    private double launchAngle = 0;
 
     public Shooter(Supplier<Pose2d> poseSupplier){
         m_PoseSupplier = poseSupplier;
@@ -64,8 +79,8 @@ public class Shooter extends SubsystemBase {
         .withKD(ShooterConstants.shooterkD);
 
 
-        positionRequest = new PositionDutyCycle(setHoodAngle);
-        speedRequest = new VelocityDutyCycle(setShooterSpeed);
+        positionRequest = new PositionVoltage(setHoodAngle);
+        speedRequest = new VelocityVoltage(setShooterSpeed);
 
         
         m_HoodConfigurator.apply(m_hoodConfigs);
@@ -83,9 +98,26 @@ public class Shooter extends SubsystemBase {
     }
     @Override
        public void periodic(){
-        zeroHoodOnLimitSwitch();
+        //Convert Robot Position Realitive to target
+        robotRelativeToTarget = new Pose2d(
+          (m_PoseSupplier.get().getX() - target.getY()),
+          (m_PoseSupplier.get().getY() - target.getY()),
+          (m_PoseSupplier.get().getRotation()) //Need to figure out how to convert to angle from front of robot to hub
+        );
+        //Using Relative Position find the distance to the target and calculate launch angle
+        distance = Math.sqrt(Math.pow(robotRelativeToTarget.getX(), 2) +  Math.pow(robotRelativeToTarget.getY(), 2));
+
+        launchAngle = Math.atan((Math.pow(AimingConstants.launchSpeed,2)
+        + Math.sqrt(Math.pow(AimingConstants.launchSpeed,4) + (9.81)*(
+        (9.81)*Math.pow(distance,2)
+        + (2 * (target.getZ()- AimingConstants.turretHeight) * Math.pow(AimingConstants.launchSpeed, 2)))))
+         /((9.81) * distance));
+
         //If the Shooter is active and at speed send true to SmartDashboard
         SmartDashboard.putBoolean("Ready to Fire", isShooterAtSpeed() && setShooterSpeed > 0);
+
+        //Homing Code
+        zeroHoodOnLimitSwitch();
 
         if(isHoming){
             if(!(m_Limit.getValue() > 0))
@@ -147,9 +179,9 @@ public class Shooter extends SubsystemBase {
         if (!wasResetByLimit && m_Limit.getValue() > 0) {
           // Zero the encoder only when the limit switch is switches from "unpressed" to "pressed" to
           // prevent constant zeroing while pressed
-          m_Hood.setPosition(ShooterConstants.hoodZeroAngle);
           wasResetByLimit = true;
         } else if (!(m_Limit.getValue() > 0)) {
+          m_Hood.setPosition(0);
           wasResetByLimit = false;
         }
       }

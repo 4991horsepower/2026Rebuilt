@@ -4,7 +4,7 @@ package frc.robot.subsystems;
 
 import java.util.function.Supplier;
 
-import com.ctre.phoenix6.configs.SlotConfigs;
+import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.configs.TalonFXSConfigurator;
 import com.ctre.phoenix6.hardware.TalonFXS;
 
@@ -22,7 +22,7 @@ public class Turret extends SubsystemBase {
 
     private final TalonFXSConfigurator m_TurretConfigurator;
 
-    private final SlotConfigs m_TurretConfig;
+    private final Slot0Configs m_TurretConfig;
 
     private double setTurretAngle = 0;
 
@@ -35,11 +35,10 @@ public class Turret extends SubsystemBase {
 
         m_TurretConfigurator = m_Turret.getConfigurator();
 
-        m_TurretConfig = new SlotConfigs();
-
-        m_TurretConfig.kP = TurretConstants.turretkP;
-        m_TurretConfig.kI = TurretConstants.turretkI;
-        m_TurretConfig.kD = TurretConstants.turretkD;
+        m_TurretConfig = new Slot0Configs()
+        .withKP(TurretConstants.turretkP)
+        .withKI(TurretConstants.turretkI)
+        .withKD(TurretConstants.turretkD);
 
         m_TurretConfigurator.apply(m_TurretConfig);
 

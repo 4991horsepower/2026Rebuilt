@@ -2,7 +2,10 @@ package frc.robot;
 
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 
+import edu.wpi.first.units.Unit;
+
 import edu.wpi.first.math.geometry.Translation3d;
+import edu.wpi.first.math.util.Units;
 
 public final class Constants {
     public static final class DebugConstants
@@ -21,12 +24,21 @@ public final class Constants {
         public static final Translation3d hub = new Translation3d(
             0,
             0,
-            72); //X Cord of Hub
+            Units.inchesToMeters(72));
 
-        public static final double playerWallY = 0; //Y Cord of player wall target for better reliablity
+        public static final Translation3d leftWall = new Translation3d(
+            0,
+            .5,
+            0);
 
-        public static final double playerWallLeft = 0; //X cord of left side target
-        public static final double playerWallRight = 0; //X cord of right side target
+        public static final Translation3d RightWall = new Translation3d(
+            0,
+            .5,
+            0);
+        
+        public static final double launchSpeed = 10;//meters/sec //assuming relativily constant launch speed //Needs Tuned
+
+        public static final double turretHeight = Units.inchesToMeters(21);//Meters off of Floor //Needs Tuned
 
 
     }

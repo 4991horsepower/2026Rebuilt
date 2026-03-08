@@ -5,6 +5,7 @@ import frc.robot.Constants.IntakeConstants;
 
 import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.configs.TalonFXConfigurator;
+import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.revrobotics.PersistMode;
 import com.revrobotics.RelativeEncoder;
@@ -30,6 +31,8 @@ public class Intake extends SubsystemBase {
     private final SparkMaxConfig m_LinearConfig;
 
     private final RelativeEncoder m_LinEncoder;
+
+    private VelocityVoltage speedRequest = new VelocityVoltage(0);
 
     private double setSpeed = 0;
     private double setPos = 0;
@@ -78,7 +81,7 @@ public class Intake extends SubsystemBase {
 
     public void setIntakeSpeed(double speed){
         setSpeed = speed;
-        m_InMotor.set(setSpeed);
+        m_InMotor.setControl(speedRequest.withVelocity(setSpeed));
     }
 
     public void stopWheels(){
