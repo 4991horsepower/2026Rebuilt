@@ -47,18 +47,20 @@ public final class Constants {
         //Hood Motor
         public static final int hoodCANID = 6;
 
-        public static final double hoodkP = 0.01;
+        public static final double hoodkP = 200;
         public static final double hoodkI = 0.00;
-        public static final double hoodkD = 0.00;
+        public static final double hoodkD = 3;
 
         public static final int kHoodGearRatio = 144;//Motor Rotations to Hood Rotations
 
         //Shooter Motor
         public static final int shooterCANID = 7;
         
-        public static final double shooterkP = 0.01;
-        public static final double shooterkI = 0.00;
+        public static final double shooterkP = 12;
+        public static final double shooterkI = 0.0;
         public static final double shooterkD = 0.00;
+        public static final double shooterkS = 12;
+        public static final double shooterkV = 0.27;
 
         public static final int shooterShotSpeed = 0;
 
@@ -106,12 +108,12 @@ public final class Constants {
         public static final double inkD = 0;
         public static final double inkV = 1;
 
-        public static final double intakeRunVolt = 0;
+        public static final double intakeRunSpeed = 40; //Rotations per minute
 
-        public static final double intakeOutPos = 56.5;
-        public static final double intakeInPos = 0;
+        public static final double intakeOutPos = 56.5; //Rotations
+        public static final double intakeInPos = 0; //Rotations
 
-        public static final double intakeMaxAllErr = .1;
+        public static final double intakeMaxAllErr = .1; // Rotations
     }
 
     public static final class SpindexerConstants{

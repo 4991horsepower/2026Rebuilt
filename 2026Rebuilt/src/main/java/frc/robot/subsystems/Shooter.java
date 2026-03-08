@@ -63,7 +63,7 @@ public class Shooter extends SubsystemBase {
         m_Hood = new TalonFX(ShooterConstants.hoodCANID);
         m_Wheel = new TalonFX(ShooterConstants.shooterCANID);
 
-        m_Limit = new AnalogInput(0);
+        m_Limit = new AnalogInput(9);
 
         m_HoodConfigurator = m_Hood.getConfigurator();
         m_WheelConfigurator = m_Wheel.getConfigurator();
@@ -76,7 +76,9 @@ public class Shooter extends SubsystemBase {
         m_wheelConfigs = new SlotConfigs()
         .withKP(ShooterConstants.shooterkP)
         .withKI(ShooterConstants.shooterkI)
-        .withKD(ShooterConstants.shooterkD);
+        .withKD(ShooterConstants.shooterkD)
+        .withKV(ShooterConstants.shooterkV)
+        .withKS(ShooterConstants.shooterkS);
 
 
         positionRequest = new PositionVoltage(setHoodAngle);
@@ -102,7 +104,7 @@ public class Shooter extends SubsystemBase {
         robotRelativeToTarget = new Pose2d(
           (m_PoseSupplier.get().getX() - target.getY()),
           (m_PoseSupplier.get().getY() - target.getY()),
-          (m_PoseSupplier.get().getRotation()) //Need to figure out how to convert to angle from front of robot to hub
+          (m_PoseSupplier.get().getRotation()) //Need to figure out how to convert to angle from front of robot to hub //Only important for velocity adjustments 
         );
         //Using Relative Position find the distance to the target and calculate launch angle
         distance = Math.sqrt(Math.pow(robotRelativeToTarget.getX(), 2) +  Math.pow(robotRelativeToTarget.getY(), 2));
