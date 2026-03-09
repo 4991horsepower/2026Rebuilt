@@ -31,7 +31,7 @@ public class Turret extends SubsystemBase {
     private Translation2d m_TurretPosition;
 
     public Turret(Supplier<Pose2d> poseSupplier){
-        m_Turret = new TalonFXS(TurretConstants.turretCANID);
+        m_Turret = new TalonFXS(TurretConstants.turretCANID,"Default Name");
 
         m_TurretConfigurator = m_Turret.getConfigurator();
 

@@ -1,16 +1,10 @@
 package frc.robot.subsystems;
 
-import static edu.wpi.first.units.Units.MetersPerSecondPerSecond;
-
 import java.util.function.Supplier;
 
 import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation3d;
-import edu.wpi.first.math.geometry.proto.Translation2dProto;
-import edu.wpi.first.units.Units;
-import edu.wpi.first.units.measure.Velocity;
-import edu.wpi.first.wpilibj.AnalogInput;
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.DebugConstants;
@@ -19,14 +13,9 @@ import frc.robot.Constants.AimingConstants;
 
 import com.ctre.phoenix6.configs.SlotConfigs;
 import com.ctre.phoenix6.configs.TalonFXConfigurator;
-import com.ctre.phoenix6.controls.ControlRequest;
-import com.ctre.phoenix6.controls.PositionDutyCycle;
 import com.ctre.phoenix6.controls.PositionVoltage;
-import com.ctre.phoenix6.controls.VelocityDutyCycle;
-import com.ctre.phoenix6.controls.VelocityVoltage;
-import com.ctre.phoenix6.controls.VoltageOut;
+import com.ctre.phoenix6.controls.VelocityTorqueCurrentFOC;
 import com.ctre.phoenix6.hardware.TalonFX;
-import com.revrobotics.spark.SparkBase.ControlType;
 
 
 public class Shooter extends SubsystemBase {
@@ -40,13 +29,13 @@ public class Shooter extends SubsystemBase {
     private final TalonFXConfigurator m_HoodConfigurator;
     private final TalonFXConfigurator m_WheelConfigurator;
 
-    private final AnalogInput m_Limit;
+    private final DigitalInput m_Limit;
 
     private double setHoodAngle = 0;
     private double setShooterSpeed = 0;
 
     private PositionVoltage positionRequest; 
-    private VelocityVoltage speedRequest;
+    private VelocityTorqueCurrentFOC speedRequest;
 
     private boolean isHoming = false;
     private boolean wasResetByLimit = false;
@@ -60,10 +49,10 @@ public class Shooter extends SubsystemBase {
     public Shooter(Supplier<Pose2d> poseSupplier){
         m_PoseSupplier = poseSupplier;
 
-        m_Hood = new TalonFX(ShooterConstants.hoodCANID);
-        m_Wheel = new TalonFX(ShooterConstants.shooterCANID);
+        m_Hood = new TalonFX(ShooterConstants.hoodCANID , "Default Name");
+        m_Wheel = new TalonFX(ShooterConstants.shooterCANID , "Default Name");
 
-        m_Limit = new AnalogInput(9);
+        m_Limit = new DigitalInput(9);
 
         m_HoodConfigurator = m_Hood.getConfigurator();
         m_WheelConfigurator = m_Wheel.getConfigurator();
@@ -82,7 +71,7 @@ public class Shooter extends SubsystemBase {
 
 
         positionRequest = new PositionVoltage(setHoodAngle);
-        speedRequest = new VelocityVoltage(setShooterSpeed);
+        speedRequest = new VelocityTorqueCurrentFOC(setShooterSpeed);
 
         
         m_HoodConfigurator.apply(m_hoodConfigs);
@@ -100,6 +89,7 @@ public class Shooter extends SubsystemBase {
     }
     @Override
        public void periodic(){
+/*
         //Convert Robot Position Realitive to target
         robotRelativeToTarget = new Pose2d(
           (m_PoseSupplier.get().getX() - target.getY()),
@@ -114,7 +104,7 @@ public class Shooter extends SubsystemBase {
         (9.81)*Math.pow(distance,2)
         + (2 * (target.getZ()- AimingConstants.turretHeight) * Math.pow(AimingConstants.launchSpeed, 2)))))
          /((9.81) * distance));
-
+*/
         //If the Shooter is active and at speed send true to SmartDashboard
         SmartDashboard.putBoolean("Ready to Fire", isShooterAtSpeed() && setShooterSpeed > 0);
 
@@ -122,7 +112,7 @@ public class Shooter extends SubsystemBase {
         zeroHoodOnLimitSwitch();
 
         if(isHoming){
-            if(!(m_Limit.getValue() > 0))
+            if(!(m_Limit.get()))
             {
             m_Hood.setVoltage(ShooterConstants.hoodHomingVolts);
             }
@@ -178,11 +168,11 @@ public class Shooter extends SubsystemBase {
        }
 
        private void zeroHoodOnLimitSwitch() {
-        if (!wasResetByLimit && m_Limit.getValue() > 0) {
+        if (!wasResetByLimit && m_Limit.get()) {
           // Zero the encoder only when the limit switch is switches from "unpressed" to "pressed" to
           // prevent constant zeroing while pressed
           wasResetByLimit = true;
-        } else if (!(m_Limit.getValue() > 0)) {
+        } else if (!(m_Limit.get())) {
           m_Hood.setPosition(0);
           wasResetByLimit = false;
         }

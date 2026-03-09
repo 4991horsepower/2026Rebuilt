@@ -1,11 +1,12 @@
 package frc.robot.subsystems;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.IntakeConstants;
 
-import com.ctre.phoenix6.configs.Slot0Configs;
+import com.ctre.phoenix6.configs.SlotConfigs;
 import com.ctre.phoenix6.configs.TalonFXConfigurator;
-import com.ctre.phoenix6.controls.VelocityVoltage;
+import com.ctre.phoenix6.controls.VelocityTorqueCurrentFOC;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.revrobotics.PersistMode;
 import com.revrobotics.RelativeEncoder;
@@ -22,7 +23,7 @@ public class Intake extends SubsystemBase {
 
     private final TalonFXConfigurator m_InConfigurator;
 
-    private final Slot0Configs m_InConfigs;
+    private final SlotConfigs m_InConfigs;
 
     private final SparkFlex m_Linear;
 
@@ -32,17 +33,17 @@ public class Intake extends SubsystemBase {
 
     private final RelativeEncoder m_LinEncoder;
 
-    private VelocityVoltage speedRequest = new VelocityVoltage(0);
+    private VelocityTorqueCurrentFOC speedRequest = new VelocityTorqueCurrentFOC(0);
 
     private double setSpeed = 0;
     private double setPos = 0;
     
     public Intake(){
-        m_InMotor = new TalonFX(IntakeConstants.intakeCANID);
+        m_InMotor = new TalonFX(IntakeConstants.intakeCANID, "Default Name");
 
         m_InConfigurator = m_InMotor.getConfigurator();
 
-        m_InConfigs = new Slot0Configs()
+        m_InConfigs = new SlotConfigs()
             .withKP(IntakeConstants.inkP)
             .withKI(IntakeConstants.inkI)
             .withKD(IntakeConstants.inkD)
@@ -57,18 +58,22 @@ public class Intake extends SubsystemBase {
         m_LinEncoder = m_Linear.getEncoder();
 
         m_LinearConfig
-        .inverted(IntakeConstants.linInverted)
         .idleMode(IntakeConstants.linIdleMode)
+        .inverted(IntakeConstants.intakeInverted)
         .closedLoop.pid(
             IntakeConstants.linkP,
             IntakeConstants.linkI,
             IntakeConstants.linkD
         );
 
-        m_LinearConfig.encoder.inverted(IntakeConstants.linInverted);
-
         m_InConfigurator.apply(m_InConfigs);
         m_Linear.configure(m_LinearConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+    }
+
+    @Override
+    public void periodic() {
+        SmartDashboard.putNumber("Intake Desired Position",setPos);
+        SmartDashboard.putNumber("Intake Current Position", m_LinEncoder.getPosition());
     }
 
     public void setIntakePosition(double pos){

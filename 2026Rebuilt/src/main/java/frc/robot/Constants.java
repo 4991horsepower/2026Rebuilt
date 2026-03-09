@@ -93,7 +93,7 @@ public final class Constants {
 
         public static final int linearCANID = 2;
 
-        public static final boolean intakeInverted = false;
+        public static final boolean intakeInverted = true;
 
         public static final boolean linInverted = true;
         
@@ -108,7 +108,7 @@ public final class Constants {
         public static final double inkD = 0;
         public static final double inkV = 1;
 
-        public static final double intakeRunSpeed = 40; //Rotations per minute
+        public static final double intakeRunSpeed = 30; //Rotations per second
 
         public static final double intakeOutPos = 56.5; //Rotations
         public static final double intakeInPos = 0; //Rotations
@@ -128,7 +128,7 @@ public final class Constants {
 
         public static final IdleMode spinIdleMode = IdleMode.kCoast;
 
-        public static final double spinSpeed = 2000;
+        public static final double spinSpeed = 50;
     }
 
     public static final class UptakeConstants{
@@ -142,6 +142,6 @@ public final class Constants {
 
         public static final boolean UpInverted = false;
 
-        public static final double uptakeSpeed = 2000;
+        public static final double uptakeSpeed = 50;
     }
 }

@@ -54,7 +54,7 @@ public class RobotContainer {
   private final Spindexer m_Spindexer = new Spindexer();
   private final Uptake m_Uptake = new Uptake();
   //private final Turret m_Turret = new Turret(m_Drive.getPoseSupplier());
-  //private final Shooter m_Shooter = new Shooter(m_Drive.getPoseSupplier());
+  private final Shooter m_Shooter = new Shooter(m_Drive.getPoseSupplier());
 
 
   public RobotContainer() {
@@ -97,6 +97,7 @@ public class RobotContainer {
         //Cancel All Commands
         m_DriverController.x().onTrue(new InstantCommand(()->cancelAllCommands()));
 
+
         //Intake Controls
         m_CopilotController.a().onChange(new IntakeOut(m_intake));
         m_CopilotController.b().onChange(new IntakeIn(m_intake));
@@ -107,7 +108,8 @@ public class RobotContainer {
         //While trigger is held fire balls
         m_CopilotController.leftTrigger(.5)
         .onTrue(new SpindexerDrive(m_Spindexer)
-        .alongWith(new UptakeUp(m_Uptake)));
+        .alongWith(new UptakeUp(m_Uptake))
+        .alongWith(new ShooterSpinUp(m_Shooter)));
     }
 
   public Command getAutonomousCommand() {

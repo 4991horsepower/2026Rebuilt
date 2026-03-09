@@ -15,7 +15,9 @@ public class IntakeOut extends Command {
 @Override
 public void execute(){
     m_intake.setIntakePosition(IntakeConstants.intakeOutPos);
+    System.out.print("Intake Reached Out Position");
     m_intake.setIntakeSpeed(IntakeConstants.intakeRunSpeed);
+    System.out.print("Wheels Started");
 }
 
 @Override 
