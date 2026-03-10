@@ -103,13 +103,19 @@ public class RobotContainer {
         m_CopilotController.b().onChange(new IntakeIn(m_intake));
 
         //Shooter Controls
-        //m_CopilotController.start().onChange(new stopShooter(m_Shooter));
+        m_CopilotController.start().onChange(new stopShooter(m_Shooter));
 
         //While trigger is held fire balls
         m_CopilotController.leftTrigger(.5)
-        .onTrue(new SpindexerDrive(m_Spindexer)
+        .onTrue(new ShooterSpinUp(m_Shooter)
+        .andThen(new SpindexerDrive(m_Spindexer)
         .alongWith(new UptakeUp(m_Uptake))
-        .alongWith(new ShooterSpinUp(m_Shooter)));
+        ));
+
+        //While trigger is not held stop spindex and uptake
+        m_CopilotController.leftTrigger(.5)
+        .toggleOnFalse(new SpindexerStop(m_Spindexer)
+        .alongWith(new UptakeStop(m_Uptake)));
     }
 
   public Command getAutonomousCommand() {

@@ -13,8 +13,10 @@ import frc.robot.Constants.AimingConstants;
 
 import com.ctre.phoenix6.configs.SlotConfigs;
 import com.ctre.phoenix6.configs.TalonFXConfigurator;
+import com.ctre.phoenix6.controls.PositionTorqueCurrentFOC;
 import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.controls.VelocityTorqueCurrentFOC;
+import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.hardware.TalonFX;
 
 
@@ -31,10 +33,10 @@ public class Shooter extends SubsystemBase {
 
     private final DigitalInput m_Limit;
 
-    private double setHoodAngle = 0;
+    private double setHoodAngle = 11;
     private double setShooterSpeed = 0;
 
-    private PositionVoltage positionRequest; 
+    private PositionTorqueCurrentFOC positionRequest; 
     private VelocityTorqueCurrentFOC speedRequest;
 
     private boolean isHoming = false;
@@ -70,7 +72,7 @@ public class Shooter extends SubsystemBase {
         .withKS(ShooterConstants.shooterkS);
 
 
-        positionRequest = new PositionVoltage(setHoodAngle);
+        positionRequest = new PositionTorqueCurrentFOC(setHoodAngle);
         speedRequest = new VelocityTorqueCurrentFOC(setShooterSpeed);
 
         
@@ -85,8 +87,9 @@ public class Shooter extends SubsystemBase {
             SmartDashboard.putNumber("Actual Shooter Speed", m_Wheel.getVelocity().getValueAsDouble());
         }
 
-        
+        setHoodAngle(setHoodAngle);
     }
+
     @Override
        public void periodic(){
 /*
@@ -114,7 +117,7 @@ public class Shooter extends SubsystemBase {
         if(isHoming){
             if(!(m_Limit.get()))
             {
-            m_Hood.setVoltage(ShooterConstants.hoodHomingVolts);
+            m_Hood.setControl(new VoltageOut(ShooterConstants.hoodHomingVolts));
             }
             else{
                 isHoming = false;
@@ -126,9 +129,9 @@ public class Shooter extends SubsystemBase {
         //Setters
        public void setHoodAngle(double hoodAngle){
         //if inputed angle is within bounds set desired hood angle as input otherwise set as closet allowed angle
-            if(hoodAngle > ShooterConstants.maxHoodAngle) {setHoodAngle = ShooterConstants.maxHoodAngle * ShooterConstants.kHoodGearRatio;}
-            else if(hoodAngle < ShooterConstants.minHoodAngle) {setHoodAngle = ShooterConstants.minHoodAngle * ShooterConstants.kHoodGearRatio;}
-            else setHoodAngle = hoodAngle * ShooterConstants.kHoodGearRatio;
+            if(hoodAngle > ShooterConstants.maxHoodAngle) {setHoodAngle = ShooterConstants.maxHoodAngle;}
+            else if(hoodAngle < ShooterConstants.minHoodAngle) {setHoodAngle = ShooterConstants.minHoodAngle;}
+            else setHoodAngle = hoodAngle;
             //Needs Converted from Angle to Motor Rotations
         m_Hood.setControl(positionRequest.withPosition(setHoodAngle));
        }

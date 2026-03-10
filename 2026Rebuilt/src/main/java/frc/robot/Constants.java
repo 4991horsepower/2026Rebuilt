@@ -62,12 +62,12 @@ public final class Constants {
         public static final double shooterkS = 12;
         public static final double shooterkV = 0.27;
 
-        public static final int shooterShotSpeed = 0;
+        public static final int shooterShotSpeed = 20;
 
         //Limits
-        public static final double maxHoodAngle = 60; //Degrees From Horizontal
-        public static final double minHoodAngle = 15; //Degrees From Horizontal
-        public static final double hoodZeroAngle = 60; //Degrees from Horizontal
+        public static final double maxHoodAngle = 13;
+        public static final double minHoodAngle = 0;
+        public static final double hoodZeroAngle = 0;
 
         public static final double hoodHomingVolts = 2;
 
