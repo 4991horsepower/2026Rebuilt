@@ -54,7 +54,7 @@ public class RobotContainer {
   private final Uptake m_Uptake = new Uptake();
   private final Turret m_Turret = new Turret(m_Drive.getPoseSupplier());
   private final Shooter m_Shooter = new Shooter(m_Drive.getPoseSupplier());
-
+  private final Vision m_Vision = new Vision(m_Drive, m_Turret);
 
   public RobotContainer() {
     NamedCommands.registerCommand("Intake Out", new IntakeOut(m_intake));
