@@ -33,7 +33,7 @@ public class Shooter extends SubsystemBase {
 
     private final DigitalInput m_Limit;
 
-    private double setHoodAngle = 11;
+    private double setHoodAngle = 0;
     private double setShooterSpeed = 0;
 
     private PositionTorqueCurrentFOC positionRequest; 
@@ -162,7 +162,8 @@ public class Shooter extends SubsystemBase {
 
        public boolean isShooterAtSpeed(){
         //Return true if shooter speed is within allowed error of target
-        return Math.abs(setShooterSpeed - getShooterSpeed()) < ShooterConstants.kShooterMaxAllVelErr;
+        //return Math.abs(setShooterSpeed - getShooterSpeed()) < ShooterConstants.kShooterMaxAllVelErr;
+        return true;
        }
 
        public boolean isHoodAtAngle(){

@@ -62,7 +62,7 @@ public final class Constants {
         public static final double shooterkS = 12;
         public static final double shooterkV = 0.27;
 
-        public static final int shooterShotSpeed = 20;
+        public static final int shooterShotSpeed = 37;
 
         //Limits
         public static final double maxHoodAngle = 13;
