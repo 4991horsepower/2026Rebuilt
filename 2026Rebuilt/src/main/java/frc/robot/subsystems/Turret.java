@@ -4,6 +4,8 @@ package frc.robot.subsystems;
 
 import java.util.function.Supplier;
 
+import com.ctre.phoenix6.BaseStatusSignal;
+import com.ctre.phoenix6.StatusSignal;
 import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.configs.TalonFXSConfigurator;
 import com.ctre.phoenix6.controls.PositionVoltage;
@@ -18,6 +20,8 @@ import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.units.measure.Angle;
+import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.AimingConstants;
 import frc.robot.Constants.TurretConstants;
@@ -40,6 +44,12 @@ public class Turret extends SubsystemBase {
 
     private Pose2d target;
 
+    private final StatusSignal<Angle> m_positionSignal;
+    private final StatusSignal<AngularVelocity> m_velocitySignal;
+    
+    private volatile double m_latchedAngle = 0;
+    private volatile double m_latchedVelocity = 0;
+
     public Turret(Supplier<Pose2d> poseSupplier){
         m_Turret = new TalonFXS(TurretConstants.turretCANID,"Default Name");
 
@@ -54,6 +64,14 @@ public class Turret extends SubsystemBase {
 
         m_Turret.setControl(new PositionVoltage(0));
         m_PoseSupplier = poseSupplier;
+
+        m_positionSignal = m_Turret.getPosition();
+        m_velocitySignal = m_Turret.getVelocity();
+
+        // Match the 250Hz odometry loop
+        BaseStatusSignal.setUpdateFrequencyForAll(250, m_positionSignal, m_velocitySignal);
+
+        m_poseSupplier = poseSupplier;
 
         }
 
@@ -125,12 +143,30 @@ public class Turret extends SubsystemBase {
             //m_target = target;
         }
 
-        public double getTurretAngle(){
+        public void updateSignals() {
+            // refresh() pulls the latest data from the CAN bus into the signal object
+            m_positionSignal.refresh();
+            m_velocitySignal.refresh();
+            
+            // Store the raw rotations/velocity into the volatile variables
+            m_latchedAngle = m_positionSignal.getValueAsDouble();
+            m_latchedVelocity = m_velocitySignal.getValueAsDouble();
+        }
+
+        public double getTurretAngle() {
             //returns shooter angle in degrees
-            return m_Turret.getPosition().getValueAsDouble();
+        return m_latchedAngle / TurretConstants.turretGearRatio * 360.0;
+        }
+
+        public double getTurretVelocityDegreesPerSec() {
+            return m_latchedVelocity / TurretConstants.turretGearRatio * 360.0;
+        }
+
+        public BaseStatusSignal[] getSignals() {
+            return new BaseStatusSignal[] { m_positionSignal, m_velocitySignal };
         }
 
         public void stop(){
-            m_Turret.setPosition(m_Turret.getPosition().getValueAsDouble());
+            m_Turret.setPosition(m_latchedAngle);
         }
 }

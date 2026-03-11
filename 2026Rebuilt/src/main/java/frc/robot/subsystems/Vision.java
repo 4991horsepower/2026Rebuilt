@@ -1,6 +1,5 @@
 package frc.robot.subsystems;
 
-import com.ctre.phoenix6.hardware.TalonFX;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.Pair;
 import edu.wpi.first.math.VecBuilder;
@@ -10,11 +9,12 @@ import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.interpolation.TimeInterpolatableBuffer;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants.LimelightConstants;
 import frc.robot.LimelightHelpers;
 
-public class VisionSubsystem extends SubsystemBase {
-    private final CommandSwerveDrivetrain drivetrain;
-    private final TalonFX turretMotor;
+public class Vision extends SubsystemBase {
+    private final CommandSwerveDrivetrain m_drivetrain;
+    private final Turret m_turret;
 
     // Buffer stores Robot-to-Field Pose and Turret Rotations
     private final TimeInterpolatableBuffer<Pair<Pose2d, Double>> syncBuffer = 
@@ -30,19 +30,18 @@ public class VisionSubsystem extends SubsystemBase {
     private final Translation2d ROBOT_TO_TURRET_PIVOT = new Translation2d(0.1, 0.0);
     private final Translation2d TURRET_PIVOT_TO_CAMERA = new Translation2d(0.05, 0.0);
 
-    public VisionSubsystem(CommandSwerveDrivetrain drivetrain, TalonFX turretMotor) {
-        this.drivetrain = drivetrain;
-        this.turretMotor = turretMotor;
+    public Vision(CommandSwerveDrivetrain drivetrain, Turret turret) {
+        m_drivetrain = drivetrain;
+        m_turret = turret;
 
-        LimelightHelpers.setCameraPose_RobotSpace("limelight", 0, 0, 0.45, 15, 0, 0);
-       
-        // Sync turret and chassis at 250Hz via the Phoenix 6 telemetry hook
-        this.drivetrain.registerTelemetry(state -> {
-            syncBuffer.addSample(state.Timestamp, new Pair<>(
-                state.Pose, 
-                turretMotor.getPosition().getValueAsDouble()
-            ));
-        });
+        LimelightHelpers.setCameraPose_RobotSpace(
+            LimelightConstants.kLimelightName, 
+            LimelightConstants.kLimelightForward, 
+            LimelightConstants.kLimelightSide, 
+            LimelightConstants.kLimelightUp, 
+            LimelightConstants.kLimelightRoll, 
+            LimelightConstants.kLimelightPitch, 
+            LimelightConstants.kLimelightYaw);
     }
 
     @Override
@@ -50,13 +49,22 @@ public class VisionSubsystem extends SubsystemBase {
         updateVision();
     }
 
+    public void addBufferSample(double timestamp, Pose2d robotPose, double turretAngle) {
+        // Convert degrees back to rotations for the buffer to match the interpolation function
+        // or store as degrees if your interpolation function expects degrees. 
+        // Here we use rotations to maintain motor-space precision.
+        double turretRotations = turretAngle / 360.0;
+        
+        syncBuffer.addSample(timestamp, new Pair<>(robotPose, turretRotations));
+    }
+
     private void updateVision() {
         // Get initial estimate for timestamp
-        var mt2 = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2("limelight");
+        var mt2 = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(LimelightConstants.kLimelightName);
 
         // Heuristics Rejection
-        double robotVelocity = drivetrain.getPigeon2().getAngularVelocityZWorld().getValueAsDouble();
-        double turretVelocity = turretMotor.getVelocity().getValueAsDouble() * 360.0; // Rotations/sec to Degrees/sec
+        double robotVelocity = m_drivetrain.getPigeon2().getAngularVelocityZWorld().getValueAsDouble();
+        double turretVelocity = m_turret.getTurretVelocityDegreesPerSec();
         double combinedVelocity = Math.abs(robotVelocity + turretVelocity);
         if (mt2.tagCount == 0 || mt2.avgTagDist > 6.0 || combinedVelocity > 720) return;
 
@@ -76,11 +84,11 @@ public class VisionSubsystem extends SubsystemBase {
 
             // 3. Orientation Seeding (Latest best-guess for solver stability)
             double combinedYaw = robotPoseAtT.getRotation().getDegrees() + (turretRot * 360.0);
-            LimelightHelpers.SetRobotOrientation("limelight", combinedYaw, 0, 0, 0, 0, 0);
+            LimelightHelpers.SetRobotOrientation(LimelightConstants.kLimelightName, combinedYaw, 0, 0, 0, 0, 0);
 
             // 4. Inject into Estimator
             double stdDev = (mt2.tagCount > 1) ? 0.5 : 1.0;
-            drivetrain.addVisionMeasurement(
+            m_drivetrain.addVisionMeasurement(
                 correctedRobotPose, 
                 mt2.timestampSeconds, 
                 VecBuilder.fill(stdDev, stdDev, 9999999)

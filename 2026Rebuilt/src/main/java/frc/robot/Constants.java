@@ -178,9 +178,11 @@ public final class Constants {
 
     public static final class LimelightConstants{
         public static final String kLimelightName = "limelight";
+        // THESE ARE SPECIFICALLY DIMENSIONS UNAFFECTED BY TURRET MOVEMENT
+        // MOTION COUPLED TO TURRET MOVEMENT SHOULD BE ACCOUNTED FOR BY POSE OFFSETS
         public static final double kLimelightForward = 0.0; // Forward offset (meters)
         public static final double kLimelightSide = 0.0; // Side offset (meters)
-        public static final double kLimelightUp = 0.0; // Height offset (meters)
+        public static final double kLimelightUp = 0.45; // Height offset (meters)
         public static final double kLimelightRoll = 0; // Roll (degrees)
         public static final double kLimelightPitch = 15.0; // Pitch (degrees)
         public static final double kLimelightYaw = 0; // Yaw (degrees)

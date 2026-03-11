@@ -57,6 +57,14 @@ public class RobotContainer {
   private final Vision m_Vision = new Vision(m_Drive, m_Turret);
 
   public RobotContainer() {
+    m_Drive.registerTelemetry(state -> {
+        // This runs at 250Hz in the Telemetry Thread
+        m_Turret.updateSignals(); 
+    
+      // Now the buffer gets robot pose AND the perfectly synced turret angle
+      m_Vision.addBufferSample(state.Timestamp, state.Pose, m_Turret.getTurretAngle());
+    });
+
     NamedCommands.registerCommand("Intake Out", new IntakeOut(m_intake));
     NamedCommands.registerCommand("Internal In", new SpindexerDrive(m_Spindexer).alongWith(new UptakeUp(m_Uptake)));
     configureBindings();
