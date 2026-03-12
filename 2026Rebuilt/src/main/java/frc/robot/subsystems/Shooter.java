@@ -95,7 +95,7 @@ public class Shooter extends SubsystemBase {
         robotRelativeToTarget = m_PoseSupplier.get().relativeTo(target);
         //Using Relative Position find the distance to the target and calculate launch speed based on table values
         distance = Math.sqrt(Math.pow(robotRelativeToTarget.getX(), 2) +  Math.pow(robotRelativeToTarget.getY(), 2));
-
+        SmartDashboard.putNumber("Distance To Target", distance);
         //If the Shooter is active and at speed send true to SmartDashboard
         SmartDashboard.putBoolean("Ready to Fire", isShooterAtSpeed() && setShooterSpeed > 0);
 
