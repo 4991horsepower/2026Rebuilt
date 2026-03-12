@@ -11,9 +11,11 @@ import com.ctre.phoenix6.hardware.TalonFXS;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-
+import frc.robot.Constants.AimingConstants;
 import frc.robot.Constants.TurretConstants;
 
 public class Turret extends SubsystemBase {
@@ -26,9 +28,15 @@ public class Turret extends SubsystemBase {
 
     private double setTurretAngle = 0;
 
-    private final Supplier<Pose2d> m_poseSupplier;
+    private final Supplier<Pose2d> m_PoseSupplier;
 
-    private Translation2d m_TurretPosition;
+    private Pose2d m_TurretPosition;
+
+    private double m_RobotThetaToTarget;
+
+    private Pose2d target = AimingConstants.hub;
+
+    private Pose2d m_TestPose;
 
     public Turret(Supplier<Pose2d> poseSupplier){
         m_Turret = new TalonFXS(TurretConstants.turretCANID,"Default Name");
@@ -42,23 +50,31 @@ public class Turret extends SubsystemBase {
 
         m_TurretConfigurator.apply(m_TurretConfig);
 
-        m_poseSupplier = poseSupplier;
+        m_PoseSupplier = poseSupplier;
 
         }
 
         public void periodic(){
+        m_TurretPosition = m_PoseSupplier.get().relativeTo(target);
 
+        m_RobotThetaToTarget = Math.atan2(m_TurretPosition.getX() , m_TurretPosition.getY());
+        setTurretAngle(m_TurretPosition.getRotation().getRotations());
+
+        SmartDashboard.putNumber("Robot X", m_TurretPosition.getX());
+        SmartDashboard.putNumber("Robot Y", m_TurretPosition.getX());
+        SmartDashboard.putNumber("Robot Theta", m_TurretPosition.getRotation().getDegrees());
+        SmartDashboard.putNumber("Turret Angle", getTurretAngle()*360);
         }
 
         public void setTurretAngle(double angle){
             //receives angle in degrees
             //Keeps Turret Bound to 1 rotations 
-            if(angle > 360) {setTurretAngle = 360;}
-            else if(angle < 0) {setTurretAngle = 0;}
+            if(angle > Units.degreesToRotations(135)) {setTurretAngle = .375;}
+            else if(angle < Units.degreesToRotations(-135)) {setTurretAngle = -.375;}
             else {setTurretAngle = angle;}
             
             //Sets Turret position to the converted angle
-            m_Turret.setPosition(Units.degreesToRotations(setTurretAngle) * TurretConstants.turretGearRatio);
+            m_Turret.setPosition(setTurretAngle);
         }
 
         //Set the target for the turret to track

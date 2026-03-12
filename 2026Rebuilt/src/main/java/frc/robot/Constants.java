@@ -3,8 +3,10 @@ package frc.robot;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 
 import edu.wpi.first.units.Unit;
-
-import edu.wpi.first.math.geometry.Translation3d;
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.interpolation.InterpolatingDoubleTreeMap;
 import edu.wpi.first.math.util.Units;
 
 public final class Constants {
@@ -21,26 +23,24 @@ public final class Constants {
 
         public static final double MidFieldSplit = 0;//Feet from origin //Splits Neutral Zone for detirmining if aiming at left or right side of hub
 
-        public static final Translation3d hub = new Translation3d(
-            0,
-            0,
-            Units.inchesToMeters(72));
+        public static final Pose2d hub = new Pose2d(
+            5,
+            5,
+            new Rotation2d(0));
 
-        public static final Translation3d leftWall = new Translation3d(
+        public static final Pose2d leftWall = new Pose2d(
             0,
             .5,
-            0);
+            new Rotation2d(0));
 
-        public static final Translation3d RightWall = new Translation3d(
-            0,
+        public static final Pose2d RightWall = new Pose2d(
+            0.0,
             .5,
-            0);
+            new Rotation2d(0));
         
         public static final double launchSpeed = 10;//meters/sec //assuming relativily constant launch speed //Needs Tuned
 
         public static final double turretHeight = Units.inchesToMeters(21);//Meters off of Floor //Needs Tuned
-
-
     }
 
     public static final class ShooterConstants{

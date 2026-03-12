@@ -3,7 +3,7 @@ package frc.robot.subsystems;
 import java.util.function.Supplier;
 
 import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Translation3d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -42,11 +42,10 @@ public class Shooter extends SubsystemBase {
     private boolean isHoming = false;
     private boolean wasResetByLimit = false;
 
-    private Translation3d target = AimingConstants.hub;
+    private Pose2d target = AimingConstants.hub;
 
     private Pose2d robotRelativeToTarget = new Pose2d();
     private double distance = 0;
-    private double launchAngle = 0;
 
     public Shooter(Supplier<Pose2d> poseSupplier){
         m_PoseSupplier = poseSupplier;
@@ -92,22 +91,16 @@ public class Shooter extends SubsystemBase {
 
     @Override
        public void periodic(){
-/*
         //Convert Robot Position Realitive to target
         robotRelativeToTarget = new Pose2d(
-          (m_PoseSupplier.get().getX() - target.getY()),
+          (m_PoseSupplier.get().getX() - target.getX()),
           (m_PoseSupplier.get().getY() - target.getY()),
           (m_PoseSupplier.get().getRotation()) //Need to figure out how to convert to angle from front of robot to hub //Only important for velocity adjustments 
         );
-        //Using Relative Position find the distance to the target and calculate launch angle
+        //Using Relative Position find the distance to the target and calculate launch speed based on table values
         distance = Math.sqrt(Math.pow(robotRelativeToTarget.getX(), 2) +  Math.pow(robotRelativeToTarget.getY(), 2));
 
-        launchAngle = Math.atan((Math.pow(AimingConstants.launchSpeed,2)
-        + Math.sqrt(Math.pow(AimingConstants.launchSpeed,4) + (9.81)*(
-        (9.81)*Math.pow(distance,2)
-        + (2 * (target.getZ()- AimingConstants.turretHeight) * Math.pow(AimingConstants.launchSpeed, 2)))))
-         /((9.81) * distance));
-*/
+
         //If the Shooter is active and at speed send true to SmartDashboard
         SmartDashboard.putBoolean("Ready to Fire", isShooterAtSpeed() && setShooterSpeed > 0);
 
@@ -117,7 +110,7 @@ public class Shooter extends SubsystemBase {
         if(isHoming){
             if(!(m_Limit.get()))
             {
-            m_Hood.setControl(new VoltageOut(ShooterConstants.hoodHomingVolts));
+            m_Hood.setVoltage(ShooterConstants.hoodHomingVolts);
             }
             else{
                 isHoming = false;
@@ -176,8 +169,8 @@ public class Shooter extends SubsystemBase {
           // Zero the encoder only when the limit switch is switches from "unpressed" to "pressed" to
           // prevent constant zeroing while pressed
           wasResetByLimit = true;
-        } else if (!(m_Limit.get())) {
           m_Hood.setPosition(0);
+        } else if (!(m_Limit.get())) {
           wasResetByLimit = false;
         }
       }
