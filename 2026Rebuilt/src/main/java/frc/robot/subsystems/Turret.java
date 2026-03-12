@@ -67,8 +67,8 @@ public class Turret extends SubsystemBase {
         }
 
         public void setTurretAngle(double angle){
-            //receives angle in degrees
-            //Keeps Turret Bound to 1 rotations 
+            //receives angle in rotations
+            //Keeps Turret Bound to .75 rotations 
             if(angle > Units.degreesToRotations(135)) {setTurretAngle = .375;}
             else if(angle < Units.degreesToRotations(-135)) {setTurretAngle = -.375;}
             else {setTurretAngle = angle;}
@@ -84,7 +84,7 @@ public class Turret extends SubsystemBase {
 
         public double getTurretAngle(){
             //returns shooter angle in degrees
-            return m_Turret.getPosition().getValueAsDouble() / TurretConstants.turretGearRatio * 360;
+            return m_Turret.getPosition().getValueAsDouble();
         }
 
         public void stop(){
