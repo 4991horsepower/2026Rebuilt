@@ -72,101 +72,100 @@ public class Turret extends SubsystemBase {
         BaseStatusSignal.setUpdateFrequencyForAll(250, m_positionSignal, m_velocitySignal);
 
         m_poseSupplier = poseSupplier;
+    }
 
-        }
+    public void periodic(){
+        Pose2d robot_pose = m_PoseSupplier.get();
 
-        public void periodic(){
-            Pose2d robot_pose = m_PoseSupplier.get();
-
-            //Target Selction
-            if(DriverStation.getAlliance().get() == DriverStation.Alliance.Red)
-            {
-                //If Robot's x is greater than shooting area set target as wall
-                if(robot_pose.getX() > AimingConstants.Red.edgeOfShootingArea){
-                    //set wall side based on Robot Y
-                    if(robot_pose.getY() > AimingConstants.Red.midFieldSplit){
-                        target = AimingConstants.Red.leftWall;
-                    }
-                    else{
-                        target = AimingConstants.Red.rightWall;
-                    }
+        //Target Selction
+        if(DriverStation.getAlliance().get() == DriverStation.Alliance.Red)
+        {
+            //If Robot's x is greater than shooting area set target as wall
+            if(robot_pose.getX() > AimingConstants.Red.edgeOfShootingArea){
+                //set wall side based on Robot Y
+                if(robot_pose.getY() > AimingConstants.Red.midFieldSplit){
+                    target = AimingConstants.Red.leftWall;
                 }
                 else{
-                    target = AimingConstants.Red.hub;
+                    target = AimingConstants.Red.rightWall;
                 }
             }
             else{
-                //If Robot's x is greater than shooting area set target as wall
-                if(robot_pose.getX() > AimingConstants.Blue.edgeOfShootingArea){
-                    //set wall side based on Robot Y
-                    if(robot_pose.getY() > AimingConstants.Blue.midFieldSplit){
-                        target = AimingConstants.Blue.leftWall;
-                    }
-                    else{
-                        target = AimingConstants.Blue.rightWall;
-                    }
+                target = AimingConstants.Red.hub;
+            }
+        }
+        else{
+            //If Robot's x is greater than shooting area set target as wall
+            if(robot_pose.getX() > AimingConstants.Blue.edgeOfShootingArea){
+                //set wall side based on Robot Y
+                if(robot_pose.getY() > AimingConstants.Blue.midFieldSplit){
+                    target = AimingConstants.Blue.leftWall;
                 }
                 else{
-                    target = AimingConstants.Blue.hub;
+                    target = AimingConstants.Blue.rightWall;
                 }
-            }   
-            //Get robot Position Relative to target
-            m_TurretPosition = robot_pose.minus(target).inverse();
+            }
+            else{
+                target = AimingConstants.Blue.hub;
+            }
+        }   
+        //Get robot Position Relative to target
+        m_TurretPosition = robot_pose.minus(target).inverse();
 
-            //Get angle to target
-            m_RobotThetaToTarget = new Rotation2d(Math.atan2(m_TurretPosition.getY() , m_TurretPosition.getX()));
+        //Get angle to target
+        m_RobotThetaToTarget = new Rotation2d(Math.atan2(m_TurretPosition.getY() , m_TurretPosition.getX()));
 
-            setTurretAngle(m_RobotThetaToTarget.getRotations());
+        setTurretAngle(m_RobotThetaToTarget.getRotations());
 
-            SmartDashboard.putNumber("Robot Real Theta", m_PoseSupplier.get().getRotation().getDegrees());
-            SmartDashboard.putNumber("Robot X", robot_pose.getX());
-            SmartDashboard.putNumber("Robot Y", robot_pose.getY());
-            SmartDashboard.putNumber("Robot Theta", robot_pose.getRotation().getDegrees());
-            SmartDashboard.putNumber("Target Relative Theta", m_TurretPosition.getRotation().getDegrees());
-            SmartDashboard.putNumber("Theta to Target", m_RobotThetaToTarget.getDegrees());
-            SmartDashboard.putNumber("Turret Angle", getTurretAngle());
-        }
+        SmartDashboard.putNumber("Robot Real Theta", m_PoseSupplier.get().getRotation().getDegrees());
+        SmartDashboard.putNumber("Robot X", robot_pose.getX());
+        SmartDashboard.putNumber("Robot Y", robot_pose.getY());
+        SmartDashboard.putNumber("Robot Theta", robot_pose.getRotation().getDegrees());
+        SmartDashboard.putNumber("Target Relative Theta", m_TurretPosition.getRotation().getDegrees());
+        SmartDashboard.putNumber("Theta to Target", m_RobotThetaToTarget.getDegrees());
+        SmartDashboard.putNumber("Turret Angle", getTurretAngle());
+    }
 
-        public void setTurretAngle(double angle){
-            //receives angle in rotations
-            //Keeps Turret Bound to .75 rotations 
-            if(angle > Units.degreesToRotations(135)) {setTurretAngle = .375;}
-            else if(angle < Units.degreesToRotations(-135)) {setTurretAngle = -.375;}
-            else {setTurretAngle = angle;}
+    public void setTurretAngle(double angle){
+        //receives angle in rotations
+        //Keeps Turret Bound to .75 rotations 
+        if(angle > Units.degreesToRotations(135)) {setTurretAngle = .375;}
+        else if(angle < Units.degreesToRotations(-135)) {setTurretAngle = -.375;}
+        else {setTurretAngle = angle;}
 
-            //Sets Turret position to the converted angle
-            m_Turret.setControl(new PositionVoltage(setTurretAngle));
-        }
+        //Sets Turret position to the converted angle
+        m_Turret.setControl(new PositionVoltage(setTurretAngle));
+    }
 
-        //Set the target for the turret to track
-        public void setTarget(Translation2d target){
-            //m_target = target;
-        }
+    //Set the target for the turret to track
+    public void setTarget(Translation2d target){
+        //m_target = target;
+    }
 
-        public void updateSignals() {
-            // refresh() pulls the latest data from the CAN bus into the signal object
-            m_positionSignal.refresh();
-            m_velocitySignal.refresh();
-            
-            // Store the raw rotations/velocity into the volatile variables
-            m_latchedAngle = m_positionSignal.getValueAsDouble();
-            m_latchedVelocity = m_velocitySignal.getValueAsDouble();
-        }
+    public void updateSignals() {
+        // refresh() pulls the latest data from the CAN bus into the signal object
+        m_positionSignal.refresh();
+        m_velocitySignal.refresh();
+        
+        // Store the raw rotations/velocity into the volatile variables
+        m_latchedAngle = m_positionSignal.getValueAsDouble();
+        m_latchedVelocity = m_velocitySignal.getValueAsDouble();
+    }
 
-        public double getTurretAngle() {
-            //returns shooter angle in degrees
-        return m_latchedAngle / TurretConstants.turretGearRatio * 360.0;
-        }
+    public double getTurretAngle() {
+        //returns shooter angle in degrees
+    return m_latchedAngle / TurretConstants.turretGearRatio * 360.0;
+    }
 
-        public double getTurretVelocityDegreesPerSec() {
-            return m_latchedVelocity / TurretConstants.turretGearRatio * 360.0;
-        }
+    public double getTurretVelocityDegreesPerSec() {
+        return m_latchedVelocity / TurretConstants.turretGearRatio * 360.0;
+    }
 
-        public BaseStatusSignal[] getSignals() {
-            return new BaseStatusSignal[] { m_positionSignal, m_velocitySignal };
-        }
+    public BaseStatusSignal[] getSignals() {
+        return new BaseStatusSignal[] { m_positionSignal, m_velocitySignal };
+    }
 
-        public void stop(){
-            m_Turret.setPosition(m_latchedAngle);
-        }
+    public void stop(){
+        m_Turret.setPosition(m_latchedAngle);
+    }
 }

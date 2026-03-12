@@ -27,8 +27,8 @@ public class Vision extends SubsystemBase {
         );
 
     // Physical Constants (Meters)
-    private final Translation2d ROBOT_TO_TURRET_PIVOT = new Translation2d(0.1, 0.0);
-    private final Translation2d TURRET_PIVOT_TO_CAMERA = new Translation2d(0.05, 0.0);
+    private final Translation2d robotToTurret = new Translation2d(LimelightConstants.kRobotToTurretX, LimelightConstants.kRobotToTurretY);
+    private final Translation2d turretToCamera = new Translation2d(LimelightConstants.kTurretToCameraX, LimelightConstants.kTurretToCameraY);
 
     public Vision(CommandSwerveDrivetrain drivetrain, Turret turret) {
         m_drivetrain = drivetrain;
@@ -58,35 +58,37 @@ public class Vision extends SubsystemBase {
         syncBuffer.addSample(timestamp, new Pair<>(robotPose, turretRotations));
     }
 
+
+
     private void updateVision() {
         // Get initial estimate for timestamp
         var mt2 = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(LimelightConstants.kLimelightName);
 
         // Heuristics Rejection
-        double robotVelocity = m_drivetrain.getPigeon2().getAngularVelocityZWorld().getValueAsDouble();
-        double turretVelocity = m_turret.getTurretVelocityDegreesPerSec();
-        double combinedVelocity = Math.abs(robotVelocity + turretVelocity);
-        if (mt2.tagCount == 0 || mt2.avgTagDist > 6.0 || combinedVelocity > 720) return;
+        double robotAngularRate = m_drivetrain.getPigeon2().getAngularVelocityZWorld().getValueAsDouble();
+        double turretAngularRate = m_turret.getTurretVelocityDegreesPerSec();
+        double combinedAngularRate = Math.abs(robotAngularRate + turretAngularRate);
+        if (mt2.tagCount == 0 || mt2.avgTagDist > 6.0 || combinedAngularRate > 720) return;
 
         syncBuffer.getSample(mt2.timestampSeconds).ifPresent(snap -> {
             Pose2d robotPoseAtT = snap.getFirst();
-            double turretRot = snap.getSecond();
-            Rotation2d turretAngle = Rotation2d.fromRotations(turretRot);
+            double turretRotDeg = snap.getSecond();
+            Rotation2d turretAngle = Rotation2d.fromDegrees(turretRotDeg);
 
             // Deterministic Local Math (Camera-to-Robot Transform)
             Transform2d robotToCamera = new Transform2d(
-                ROBOT_TO_TURRET_PIVOT.plus(TURRET_PIVOT_TO_CAMERA.rotateBy(turretAngle)),
+                robotToTurret.plus(turretToCamera.rotateBy(turretAngle)),
                 turretAngle
             );
 
             // Transform the reported Camera Field Pose into Robot Field Pose
             Pose2d correctedRobotPose = mt2.pose.plus(robotToCamera.inverse());
 
-            // 3. Orientation Seeding (Latest best-guess for solver stability)
-            double combinedYaw = robotPoseAtT.getRotation().getDegrees() + (turretRot * 360.0);
-            LimelightHelpers.SetRobotOrientation(LimelightConstants.kLimelightName, combinedYaw, 0, 0, 0, 0, 0);
+            // Orientation Seeding (Latest best-guess for solver stability)
+            double combinedYaw = robotPoseAtT.getRotation().getDegrees() + turretRotDeg;
+            LimelightHelpers.SetRobotOrientation(LimelightConstants.kLimelightName, combinedYaw, combinedAngularRate, 0, 0, 0, 0);
 
-            // 4. Inject into Estimator
+            // Inject into Estimator
             double stdDev = (mt2.tagCount > 1) ? 0.5 : 1.0;
             m_drivetrain.addVisionMeasurement(
                 correctedRobotPose, 
