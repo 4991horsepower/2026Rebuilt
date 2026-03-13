@@ -55,14 +55,22 @@ public class Turret extends SubsystemBase {
         }
 
         public void periodic(){
+        //Get robot Position Relative to target
         m_TurretPosition = m_PoseSupplier.get().relativeTo(target);
 
+        //Get angle to target
         m_RobotThetaToTarget = Math.atan2(m_TurretPosition.getX() , m_TurretPosition.getY());
+
+        //Add angle to target to existing angle
+        m_TurretPosition = m_TurretPosition.rotateBy(new Rotation2d(m_RobotThetaToTarget));
+
         setTurretAngle(m_TurretPosition.getRotation().getRotations());
 
+        SmartDashboard.putNumber("Robot Real Theta", m_PoseSupplier.get().getRotation().getDegrees());
         SmartDashboard.putNumber("Robot X", m_TurretPosition.getX());
         SmartDashboard.putNumber("Robot Y", m_TurretPosition.getX());
-        SmartDashboard.putNumber("Robot Theta", m_TurretPosition.getRotation().getDegrees());
+        SmartDashboard.putNumber("Target Relative Theta", m_TurretPosition.getRotation().getDegrees());
+        SmartDashboard.putNumber("Theta to Target", Units.radiansToDegrees(m_RobotThetaToTarget));
         SmartDashboard.putNumber("Turret Angle", getTurretAngle()*360);
         }
 
