@@ -55,16 +55,14 @@ public class RobotContainer {
   private final Turret m_Turret = new Turret(m_Drive.getPoseSupplier());
   private final Shooter m_Shooter = new Shooter(m_Drive.getPoseSupplier());
   private final Vision m_Vision = new Vision(m_Drive, m_Turret);
+  private final Telemetry logger = new Telemetry(MaxSpeed);
 
   public RobotContainer() {
     m_Drive.registerTelemetry(state -> {
-        // This runs at 250Hz in the Telemetry Thread
-        m_Turret.updateSignals(); 
-    
-      // Now the buffer gets robot pose AND the perfectly synced turret angle
-      m_Vision.addBufferSample(state.Timestamp, state.Pose, m_Turret.getTurretAngle());
+        logger.telemeterize(state);
+        m_Turret.updateSignals();
+        m_Vision.addBufferSample(state.Timestamp, m_Turret.getTurretAngle());
     });
-
     NamedCommands.registerCommand("Intake Out", new IntakeOut(m_intake));
     NamedCommands.registerCommand("Internal In", new SpindexerDrive(m_Spindexer).alongWith(new UptakeUp(m_Uptake)));
     configureBindings();
@@ -84,7 +82,7 @@ public class RobotContainer {
 
   private void configureBindings() {
 
-    //Drive Controlls
+    //Drive Controls
         // Note that X is defined as forward according to WPILib convention,
         // and Y is defined as to the left according to WPILib convention.
         m_Drive.setDefaultCommand(
