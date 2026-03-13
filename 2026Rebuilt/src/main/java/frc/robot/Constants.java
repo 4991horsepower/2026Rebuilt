@@ -19,23 +19,25 @@ public final class Constants {
        
     }
     public static final class AimingConstants{
-        public static final double edgeOfShootingArea = 0;//Feet From Origin // Splits field accross bump for decidng if aiming for hub or at player wall
+        public static final double edgeOfShootingArea = 0;//Meters From Origin // Splits field accross bump for decidng if aiming for hub or at player wall
 
-        public static final double MidFieldSplit = 0;//Feet from origin //Splits Neutral Zone for detirmining if aiming at left or right side of hub
+        public static final double midFieldSplit = Units.inchesToMeters(158.84);//Meters from origin //Splits Neutral Zone for detirmining if aiming at left or right side of hub
 
         public static final Pose2d hub = new Pose2d(
-            5,
-            5,
+            Units.inchesToMeters(182.11),
+            midFieldSplit,
             new Rotation2d(0));
 
+        //.5 meter from driver station wall and 3/4 of total field length from conner
         public static final Pose2d leftWall = new Pose2d(
-            0,
             .5,
+            midFieldSplit + (midFieldSplit/2),
             new Rotation2d(0));
-
+            
+        //.5 meter from driver station wall and 3/4 of total field length from conner
         public static final Pose2d RightWall = new Pose2d(
-            0.0,
-            .5,
+            0.5,
+            midFieldSplit/2,
             new Rotation2d(0));
         
         public static final double launchSpeed = 10;//meters/sec //assuming relativily constant launch speed //Needs Tuned
