@@ -136,6 +136,13 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         if (Utils.isSimulation()) {
             startSimThread();
         }
+        var alliance = DriverStation.getAlliance();
+        if (alliance.isPresent()) {
+            if(alliance.get() == DriverStation.Alliance.Red)
+                resetRotation(kRedAlliancePerspectiveRotation);
+            else
+                resetRotation(kBlueAlliancePerspectiveRotation);
+        }
     }
 
     /**

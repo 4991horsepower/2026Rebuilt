@@ -111,7 +111,8 @@ public class Turret extends SubsystemBase {
         //Get angle to target
         m_RobotThetaToTarget = new Rotation2d(Math.atan2(m_TurretPosition.getY() , m_TurretPosition.getX()));
 
-        setTurretAngle(m_RobotThetaToTarget.getRotations());
+        setTurretAngle(0.25);
+        //setTurretAngle(m_RobotThetaToTarget.getRotations());
 
         SmartDashboard.putNumber("Robot Real Theta", m_PoseSupplier.get().getRotation().getDegrees());
         SmartDashboard.putNumber("Robot X", robot_pose.getX());
@@ -150,11 +151,11 @@ public class Turret extends SubsystemBase {
 
     public double getTurretAngle() {
         //returns shooter angle in degrees
-    return m_latchedAngle / TurretConstants.turretGearRatio * 360.0;
+        return m_latchedAngle * 360.0;
     }
 
     public double getTurretVelocityDegreesPerSec() {
-        return m_latchedVelocity / TurretConstants.turretGearRatio * 360.0;
+        return m_latchedVelocity * 360.0;
     }
 
     public BaseStatusSignal[] getSignals() {
@@ -162,6 +163,6 @@ public class Turret extends SubsystemBase {
     }
 
     public void stop(){
-        m_Turret.setPosition(m_latchedAngle);
+        setTurretAngle(m_latchedAngle);
     }
 }
