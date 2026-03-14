@@ -114,6 +114,7 @@ public class RobotContainer {
         //Intake Controls
         m_DriverController.x().onChange(new IntakeOut(m_intake));
         m_DriverController.b().onChange(new IntakeIn(m_intake));
+        m_DriverController.back().onTrue(m_intake.runOnce(() -> m_intake.homeIntake()));
 
         //Shooter Controls
         m_DriverController.start().onChange(new stopShooter(m_Shooter));

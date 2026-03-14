@@ -131,6 +131,6 @@ public class Turret extends SubsystemBase {
         }
 
         public void stop(){
-            m_Turret.setPosition(m_Turret.getPosition().getValueAsDouble());
+            setTurretAngle(m_Turret.getPosition().getValueAsDouble());
         }
 }

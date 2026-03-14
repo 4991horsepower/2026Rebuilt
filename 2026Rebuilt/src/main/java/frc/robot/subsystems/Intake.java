@@ -42,7 +42,7 @@ public class Intake extends SubsystemBase {
     private double setPos = 0;
     
     private boolean wasResetByLimit = false;
-    private boolean isHoming = false;
+
     public Intake(){
         m_InMotor = new TalonFX(IntakeConstants.intakeCANID, "Default Name");
 
@@ -82,19 +82,13 @@ public class Intake extends SubsystemBase {
         SmartDashboard.putNumber("Intake Desired Position",setPos);
         SmartDashboard.putNumber("Intake Current Position", m_LinEncoder.getPosition());
 
-        //Homing Code
-        if(isHoming){
-            m_Linear.setVoltage(IntakeConstants.kHomingVolts);
-        }
-
         //If Limit switch not toggled set wasResetByLimit to false
         if(!m_Limit.get() && wasResetByLimit){
             wasResetByLimit = false;
         }
-        else if(!wasResetByLimit){
+        else if(!wasResetByLimit && m_Limit.get()){
             m_LinEncoder.setPosition(0);
             wasResetByLimit = true;
-            isHoming = false;
             setIntakePosition(0);
         }
         
@@ -119,7 +113,8 @@ public class Intake extends SubsystemBase {
     }
 
     public void homeIntake(){
-        isHoming = true;
+        setIntakeSpeed(0);
+        m_LinearController.setSetpoint(IntakeConstants.kHomingVolts, ControlType.kVoltage);
     }
 
     public boolean getDone(){
