@@ -15,10 +15,8 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.AngularVelocity;
@@ -70,8 +68,6 @@ public class Turret extends SubsystemBase {
 
         // Match the 250Hz odometry loop
         BaseStatusSignal.setUpdateFrequencyForAll(250, m_positionSignal, m_velocitySignal);
-
-        m_poseSupplier = poseSupplier;
     }
 
     public void periodic(){

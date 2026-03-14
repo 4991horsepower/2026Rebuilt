@@ -11,7 +11,6 @@ import com.ctre.phoenix6.swerve.SwerveModuleConstants;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 
 import edu.wpi.first.math.Matrix;
-import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
@@ -30,8 +29,6 @@ import com.pathplanner.lib.config.PIDConstants;
 import com.pathplanner.lib.config.RobotConfig;
 import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 
-import frc.robot.Constants.LimelightConstants;
-import frc.robot.LimelightHelpers;
 import frc.robot.generated.TunerConstants.TunerSwerveDrivetrain;
 
 /**
@@ -74,6 +71,7 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
     );
 
     /* SysId routine for characterizing steer. This is used to find PID gains for the steer motors. */
+    @SuppressWarnings("unused")
     private final SysIdRoutine m_sysIdRoutineSteer = new SysIdRoutine(
         new SysIdRoutine.Config(
             null,        // Use default ramp rate (1 V/s)
@@ -94,6 +92,7 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
      * This is used to find PID gains for the FieldCentricFacingAngle HeadingController.
      * See the documentation of SwerveRequest.SysIdSwerveRotation for info on importing the log to SysId.
      */
+    @SuppressWarnings("unused")
     private final SysIdRoutine m_sysIdRoutineRotation = new SysIdRoutine(
         new SysIdRoutine.Config(
             /* This is in radians per second², but SysId only supports "volts per second" */
@@ -296,27 +295,6 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
                 m_hasAppliedOperatorPerspective = true;
             });
         }
-
-        LimelightHelpers.setCameraPose_RobotSpace(
-            LimelightConstants.kLimelightName, 
-            LimelightConstants.kLimelightForward, // Forward offset (meters)
-            LimelightConstants.kLimelightSide, // Side offset (meters)
-            LimelightConstants.kLimelightUp, // Height offset (meters)
-            LimelightConstants.kLimelightRoll, // Roll (degrees)
-            LimelightConstants.kLimelightPitch, // Pitch (degrees)
-            LimelightConstants.kLimelightYaw); // Yaw (degrees;
-
-        LimelightHelpers.SetRobotOrientation(
-            LimelightConstants.kLimelightName, 
-            getRotation3d().toRotation2d().getDegrees(), 
-            0, 
-            0, 
-            0, 
-            0, 
-            0);
-
-        LimelightHelpers.PoseEstimate mt2 = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(LimelightConstants.kLimelightName);
-        addVisionMeasurement(mt2.pose, mt2.timestampSeconds);
     }
 
     private void startSimThread() {
