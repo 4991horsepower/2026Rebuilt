@@ -53,7 +53,7 @@ public class RobotContainer {
   private final Intake m_intake = new Intake();
   private final Spindexer m_Spindexer = new Spindexer();
   private final Uptake m_Uptake = new Uptake();
-  //private final Turret m_Turret = new Turret(m_Drive.getPoseSupplier());
+  private final Turret m_Turret = new Turret(m_Drive.getPoseSupplier());
   private final Shooter m_Shooter = new Shooter(m_Drive.getPoseSupplier());
 
 
@@ -61,6 +61,18 @@ public class RobotContainer {
     NamedCommands.registerCommand("Intake Out", new IntakeOut(m_intake));
     NamedCommands.registerCommand("Internal In", new SpindexerDrive(m_Spindexer).alongWith(new UptakeUp(m_Uptake)));
     configureBindings();
+  }
+
+  private double clip_and_rescale(double i, double dz)
+  {
+    if(Math.abs(i) < dz)
+    {
+      return 0;
+    }
+    else
+    {
+      return (i - dz) / (1 - dz);
+    }
   }
 
   private void configureBindings() {
@@ -71,9 +83,9 @@ public class RobotContainer {
         m_Drive.setDefaultCommand(
             // Drivetrain will execute this command periodically
             m_Drive.applyRequest(() ->
-                drive.withVelocityX(-Math.signum(m_DriverController.getLeftY()) * Math.pow(m_DriverController.getLeftY(), 2) * MaxSpeed) // Drive forward with negative Y (forward)
-                    .withVelocityY(- Math.signum(m_DriverController.getLeftX()) * Math.pow(m_DriverController.getLeftX(), 2) * MaxSpeed) // Drive left with negative X (left)
-                    .withRotationalRate(-m_DriverController.getRightX() * MaxAngularRate) // Drive counterclockwise with negative X (left)
+                drive.withVelocityX(-Math.signum(clip_and_rescale(m_DriverController.getLeftY(), 0.05)) * Math.pow(clip_and_rescale(m_DriverController.getLeftY(), 0.05), 2) * MaxSpeed) // Drive forward with negative Y (forward)
+                    .withVelocityY(- Math.signum(clip_and_rescale(m_DriverController.getLeftX(), 0.05)) * Math.pow(clip_and_rescale(m_DriverController.getLeftX(), 0.05), 2) * MaxSpeed) // Drive left with negative X (left)
+                    .withRotationalRate(-clip_and_rescale(m_DriverController.getRightX(), 0.05) * MaxAngularRate) // Drive counterclockwise with negative X (left)
             )
         );
 

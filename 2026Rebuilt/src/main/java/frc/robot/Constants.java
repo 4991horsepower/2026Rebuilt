@@ -33,7 +33,7 @@ public final class Constants {
             .5,
             midFieldSplit + (midFieldSplit/2),
             new Rotation2d(0));
-            
+
         //.5 meter from driver station wall and 3/4 of total field length from conner
         public static final Pose2d RightWall = new Pose2d(
             0.5,
@@ -82,9 +82,9 @@ public final class Constants {
         //Turret Motor
         public static final int turretCANID = 5;
 
-        public static final double turretkP = 0.01;
+        public static final double turretkP = 500;
         public static final double turretkI = 0.00;
-        public static final double turretkD = 0.00;
+        public static final double turretkD = 10;
 
         public static final double turretGearRatio = 462; //Motor Rotations to Turret Rotations
     }
