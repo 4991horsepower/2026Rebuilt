@@ -68,21 +68,14 @@ public class Turret extends SubsystemBase {
     private final TalonFXConfigurator m_HoodConfigurator;
     private final TalonFXConfigurator m_WheelConfigurator;
 
-    private final DigitalInput m_Limit;
-
     private double setHoodAngle = 0;
     private double setShooterSpeed = 0;
 
     private PositionTorqueCurrentFOC positionRequest; 
     private VelocityTorqueCurrentFOC speedRequest;
 
-    private boolean isHoming = false;
-    private boolean wasResetByLimit = false;
-
     private boolean shooterOn;
     private boolean aimedAtTarget;
-
-    private Transform2d robotRelativeToTarget;
 
     private final AimingData aimingData = new AimingData();
 
@@ -112,8 +105,6 @@ public class Turret extends SubsystemBase {
 
         m_Hood = new TalonFX(ShooterConstants.hoodCANID , "Default Name");
         m_Wheel = new TalonFX(ShooterConstants.shooterCANID , "Default Name");
-
-        m_Limit = new DigitalInput(9);
 
         m_HoodConfigurator = m_Hood.getConfigurator();
         m_WheelConfigurator = m_Wheel.getConfigurator();
@@ -153,41 +144,41 @@ public class Turret extends SubsystemBase {
         Pose2d robot_pose = m_PoseSupplier.get();
 
         //Target Selction
-if(DriverStation.getAlliance().get() == DriverStation.Alliance.Red){
+        if(DriverStation.getAlliance().get() == DriverStation.Alliance.Red){
            //If Robot's x is greater than shooting area set target as wall
            if(robot_pose.getX() < AimingConstants.Red.edgeOfShootingArea){
             //set wall side based on Robot Y                    
             if(robot_pose.getY() > AimingConstants.Red.midFieldSplit){
-              target = AimingConstants.Red.leftWall;
-                //System.out.println("Target Red Left Wall");
-                  }
+                target = AimingConstants.Red.leftWall;
+                setHoodAngle(6);
+            }
             else{
                 target = AimingConstants.Red.rightWall;
-                //System.out.println("Target Red Right Wall");
+                setHoodAngle(6);
                 }
-              }
-              else{
-                  target = AimingConstants.Red.hub;
-                  //System.out.println("Target Red Hub");
+            }
+            else{
+                target = AimingConstants.Red.hub;
+                setHoodAngle(0);
+            }
+            }
+        else{
+            //If Robot's x is greater than shooting area set target as wall
+            if(robot_pose.getX() > AimingConstants.Blue.edgeOfShootingArea){
+                //set wall side based on Robot Y
+                if(robot_pose.getY() > AimingConstants.Blue.midFieldSplit){
+                    target = AimingConstants.Blue.leftWall;
+                    setHoodAngle(6);
                 }
-              }
-          else{
-              //If Robot's x is greater than shooting area set target as wall
-              if(robot_pose.getX() > AimingConstants.Blue.edgeOfShootingArea){
-                  //set wall side based on Robot Y
-                  if(robot_pose.getY() > AimingConstants.Blue.midFieldSplit){
-                      target = AimingConstants.Blue.leftWall;
-                      //System.out.println("Target Blue Wall");
-                  }
-                  else{
-                      target = AimingConstants.Blue.rightWall;
-                      //System.out.println("Target Blue Wall");
-                   }
-               }
-              else{
-                  target = AimingConstants.Blue.hub;
-                  //System.out.println("Target Blue Hub");
-               }
+                else{
+                    target = AimingConstants.Blue.rightWall;
+                    setHoodAngle(6);
+                }
+            }
+            else{
+                target = AimingConstants.Blue.hub;
+                setHoodAngle(0);
+            }
           }   
         //Get robot Position Relative to target
         m_TurretPosition = robot_pose.plus(robotToTurretPivot).minus(target).inverse();
@@ -303,17 +294,6 @@ if(DriverStation.getAlliance().get() == DriverStation.Alliance.Red){
     public boolean isHoodAtAngle(){
         //Returns true if hood angle is within allowed error of target
         return Math.abs(setHoodAngle - getHoodAngle()) < ShooterConstants.kHoodMaxAllPosErr;
-    }
-
-    private void zeroHoodOnLimitSwitch() {
-        if (!wasResetByLimit && m_Limit.get()) {
-          // Zero the encoder only when the limit switch is switches from "unpressed" to "pressed" to
-          // prevent constant zeroing while pressed
-          wasResetByLimit = true;
-          m_Hood.setPosition(0);
-        } else if (!(m_Limit.get())) {
-          wasResetByLimit = false;
-        }
     }
 
     public void toggleShooter(){
