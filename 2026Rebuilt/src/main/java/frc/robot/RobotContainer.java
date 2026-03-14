@@ -47,7 +47,6 @@ public class RobotContainer {
 
   
   CommandXboxController m_DriverController = new CommandXboxController(0);
-  CommandXboxController m_CopilotController = new CommandXboxController(1);
 
   private final CommandSwerveDrivetrain m_Drive = TunerConstants.createDrivetrain();
   private final Intake m_intake = new Intake();
@@ -111,21 +110,21 @@ public class RobotContainer {
 
 
         //Intake Controls
-        m_CopilotController.a().onChange(new IntakeOut(m_intake));
-        m_CopilotController.b().onChange(new IntakeIn(m_intake));
+        m_DriverController.x().onChange(new IntakeOut(m_intake));
+        m_DriverController.b().onChange(new IntakeIn(m_intake));
 
         //Shooter Controls
-        m_CopilotController.start().onChange(new stopShooter(m_Shooter));
+        m_DriverController.start().onChange(new stopShooter(m_Shooter));
 
         //While trigger is held fire balls
-        m_CopilotController.leftTrigger(.5)
+        m_DriverController.leftTrigger(.5)
         .toggleOnTrue(new ShooterSpinUp(m_Shooter)
         .andThen(new SpindexerDrive(m_Spindexer)
         .alongWith(new UptakeUp(m_Uptake))
         ));
 
         //While trigger is not held stop spindex and uptake
-        m_CopilotController.leftTrigger(.5)
+        m_DriverController.leftTrigger(.5)
         .toggleOnFalse(new SpindexerStop(m_Spindexer)
         .alongWith(new UptakeStop(m_Uptake)));
     }
