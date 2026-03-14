@@ -143,6 +143,7 @@ public final class Constants {
 
         public static final double intakeOutPos = 56.5; //Rotations
         public static final double intakeInPos = 0; //Rotations
+        public static final double intakeInterPos = 40;//Rotations
 
         public static final double intakeMaxAllErr = .1; // Rotations
     }
