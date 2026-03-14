@@ -10,8 +10,10 @@ public class AimingData {
 
 public AimingData(){
     //Needs to be inialized with data from testing 
-    shootingSpeedMap.put(null, null);
+    //in form of distance,speed
+    shootingSpeedMap.put(5.5332759667,42.0);
     //Needs to be inialized with data from testing
+    //In form of speed , Time Of Flight
     timeOfflightMap.put(null,null);
 }
 
