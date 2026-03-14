@@ -5,6 +5,7 @@ import java.util.function.Supplier;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.DebugConstants;
@@ -91,6 +92,39 @@ public class Shooter extends SubsystemBase {
 
     @Override
        public void periodic(){
+        Pose2d robot_pose = m_PoseSupplier.get();
+
+        //Target Selction
+        if(DriverStation.getAlliance().get() == DriverStation.Alliance.Red){
+           //If Robot's x is greater than shooting area set target as wall
+           if(robot_pose.getX() > AimingConstants.Red.edgeOfShootingArea){
+            //set wall side based on Robot Y                    
+            if(robot_pose.getY() > AimingConstants.Red.midFieldSplit){
+              target = AimingConstants.Red.leftWall;
+                  }
+                  else{
+                      target = AimingConstants.Red.rightWall;
+                  }
+              }
+              else{
+                  target = AimingConstants.Red.hub;
+                }
+              }
+          else{
+              //If Robot's x is greater than shooting area set target as wall
+              if(robot_pose.getX() > AimingConstants.Blue.edgeOfShootingArea){
+                  //set wall side based on Robot Y
+                  if(robot_pose.getY() > AimingConstants.Blue.midFieldSplit){
+                      target = AimingConstants.Blue.leftWall;
+                  }
+                  else{
+                      target = AimingConstants.Blue.rightWall;
+                   }
+               }
+              else{
+                  target = AimingConstants.Blue.hub;
+               }
+          }   
         //Convert Robot Position Realitive to target
         robotRelativeToTarget = m_PoseSupplier.get().relativeTo(target);
         //Using Relative Position find the distance to the target and calculate launch speed based on table values

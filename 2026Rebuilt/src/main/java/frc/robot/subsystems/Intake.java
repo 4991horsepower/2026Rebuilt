@@ -1,5 +1,6 @@
 package frc.robot.subsystems;
 
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.IntakeConstants;
@@ -21,6 +22,8 @@ public class Intake extends SubsystemBase {
 //Assuming use of Kraken for the Intake and a Vortex for the Linear Motion
     private final TalonFX m_InMotor;
 
+    private final DigitalInput m_Limit;
+
     private final TalonFXConfigurator m_InConfigurator;
 
     private final SlotConfigs m_InConfigs;
@@ -38,6 +41,7 @@ public class Intake extends SubsystemBase {
     private double setSpeed = 0;
     private double setPos = 0;
     
+    private boolean wasResetByLimit = false;
     public Intake(){
         m_InMotor = new TalonFX(IntakeConstants.intakeCANID, "Default Name");
 
@@ -48,6 +52,8 @@ public class Intake extends SubsystemBase {
             .withKI(IntakeConstants.inkI)
             .withKD(IntakeConstants.inkD)
             .withKV(IntakeConstants.inkV);
+
+        m_Limit = new DigitalInput(0);
 
         m_Linear = new SparkFlex(IntakeConstants.linearCANID, MotorType.kBrushless);
 
@@ -74,6 +80,17 @@ public class Intake extends SubsystemBase {
     public void periodic() {
         SmartDashboard.putNumber("Intake Desired Position",setPos);
         SmartDashboard.putNumber("Intake Current Position", m_LinEncoder.getPosition());
+
+        //If Limit switch not toggled set wasResetByLimit to false
+        if(!m_Limit.get() && wasResetByLimit){
+            wasResetByLimit = false;
+        }
+        else if(!wasResetByLimit){
+            m_LinEncoder.setPosition(0);
+            wasResetByLimit = true;
+        }
+        
+
     }
 
     public void setIntakePosition(double pos){
