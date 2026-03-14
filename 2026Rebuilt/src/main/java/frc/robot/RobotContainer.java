@@ -10,31 +10,24 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.Commands.*;
 import frc.robot.generated.TunerConstants;
-import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 import static edu.wpi.first.units.Units.MetersPerSecond;
 import static edu.wpi.first.units.Units.RadiansPerSecond;
 import static edu.wpi.first.units.Units.RotationsPerSecond;
 
 import com.ctre.phoenix6.swerve.SwerveRequest;
-import com.ctre.phoenix6.swerve.SwerveDrivetrain.SwerveDriveState;
 import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.util.sendable.Sendable;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.RobotModeTriggers;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
-import com.pathplanner.lib.auto.AutoBuilder;
-
-import frc.robot.generated.TunerConstants;
 
 import frc.robot.subsystems.*;
 
 public class RobotContainer {
+  @SuppressWarnings("unused")
   private AutoBuilder autoBuilder;
 
   private double MaxSpeed = TunerConstants.kSpeedAtTestVolts.in(MetersPerSecond); // kSpeedAt12Volts desired top speed
@@ -54,9 +47,15 @@ public class RobotContainer {
   private final Uptake m_Uptake = new Uptake();
   private final Turret m_Turret = new Turret(m_Drive.getPoseSupplier());
   private final Shooter m_Shooter = new Shooter(m_Drive.getPoseSupplier());
-
+  private final Vision m_Vision = new Vision(m_Drive, m_Turret);
+  private final Telemetry logger = new Telemetry(MaxSpeed);
 
   public RobotContainer() {
+    m_Drive.registerTelemetry(state -> {
+        logger.telemeterize(state);
+        m_Turret.updateSignals();
+        m_Vision.addBufferSample(state.Timestamp, m_Turret.getTurretAngle());
+    });
     NamedCommands.registerCommand("Intake Out", new IntakeOut(m_intake));
     NamedCommands.registerCommand("Internal In", new SpindexerDrive(m_Spindexer).alongWith(new UptakeUp(m_Uptake)));
     NamedCommands.registerCommand("Intake Inter", getAutonomousCommand());
@@ -78,7 +77,7 @@ public class RobotContainer {
 
   private void configureBindings() {
 
-    //Drive Controlls
+    //Drive Controls
         // Note that X is defined as forward according to WPILib convention,
         // and Y is defined as to the left according to WPILib convention.
         m_Drive.setDefaultCommand(

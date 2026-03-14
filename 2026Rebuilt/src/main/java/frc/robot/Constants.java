@@ -2,11 +2,8 @@ package frc.robot;
 
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 
-import edu.wpi.first.units.Unit;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.math.interpolation.InterpolatingDoubleTreeMap;
 import edu.wpi.first.math.util.Units;
 
 public final class Constants {
@@ -20,7 +17,7 @@ public final class Constants {
     }
     public final class AimingConstants{
         public static class Blue{
-            public static final double edgeOfShootingArea = 0;//Meters From Origin // Splits field accross bump for decidng if aiming for hub or at player wall
+            public static final double edgeOfShootingArea = Units.inchesToMeters(182.11);//Meters From Origin // Splits field accross bump for decidng if aiming for hub or at player wall
 
             public static final double midFieldSplit = Units.inchesToMeters(158.84);//Meters from origin //Splits Neutral Zone for detirmining if aiming at left or right side of hub
 
@@ -47,7 +44,7 @@ public final class Constants {
         }
 
         public static class Red{
-            public static final double edgeOfShootingArea = 0;//Meters From Origin // Splits field accross bump for decidng if aiming for hub or at player wall
+            public static final double edgeOfShootingArea = Units.inchesToMeters(469.11);//Meters From Origin // Splits field accross bump for decidng if aiming for hub or at player wall
 
             public static final double midFieldSplit = Units.inchesToMeters(158.84);//Meters from origin //Splits Neutral Zone for detirmining if aiming at left or right side of hub
 
@@ -177,5 +174,27 @@ public final class Constants {
         public static final boolean UpInverted = false;
 
         public static final double uptakeSpeed = 50;
+    }
+
+    public static final class LimelightConstants{
+        public static final String kLimelightName = "limelight";
+        // THESE ARE SPECIFICALLY DIMENSIONS UNAFFECTED BY TURRET MOVEMENT
+        // MOTION COUPLED TO TURRET MOVEMENT SHOULD BE ACCOUNTED FOR BY POSE OFFSETS
+        public static final double kLimelightForward = 0.0; // Forward offset (meters)
+        public static final double kLimelightSide = 0.0; // Side offset (meters)
+        public static final double kLimelightUp = 0.4253992; // Height offset (meters)
+        public static final double kLimelightRoll = 0; // Roll (degrees)
+        public static final double kLimelightPitch = 15.0; // Pitch (degrees)
+        public static final double kLimelightYaw = 0; // Yaw (degrees)
+
+        // Robot to Turret transform
+        public static final double kRobotToTurretX = -0.10971276; // Meters forward of robot center
+        public static final double kRobotToTurretY = 0.1097788; // Meters to the left of robot center
+        public static final double kRobotToTurretTheta = 0.0; // Degrees, positive is CCW
+       
+        // Turret to Camera transform
+        public static final double kTurretToCameraX = 0.2032; // Meters forward of turret
+        public static final double kTurretToCameraY = 0.0; // Meters to the left of turret
+        public static final double kTurretToCameraTheta = 0.0; // Degrees, positive is CCW
     }
 }
