@@ -22,6 +22,7 @@ import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.AimingConstants;
+import frc.robot.Constants.LimelightConstants;
 import frc.robot.Constants.TurretConstants;
 
 public class Turret extends SubsystemBase {
@@ -49,6 +50,8 @@ public class Turret extends SubsystemBase {
     private volatile double m_latchedVelocity = 0;
 
     private double distance;
+
+    private final Transform2d robotToTurretPivot = new Transform2d(LimelightConstants.kRobotToTurretX, LimelightConstants.kRobotToTurretY, new Rotation2d(0));
 
     public Turret(Supplier<Pose2d> poseSupplier){
         m_Turret = new TalonFXS(TurretConstants.turretCANID,"Default Name");
@@ -113,7 +116,7 @@ if(DriverStation.getAlliance().get() == DriverStation.Alliance.Red){
                }
           }   
         //Get robot Position Relative to target
-        m_TurretPosition = robot_pose.minus(target).inverse();
+        m_TurretPosition = robot_pose.plus(robotToTurretPivot).minus(target).inverse();
 
         //Get angle to target
         m_RobotThetaToTarget = new Rotation2d(Math.atan2(m_TurretPosition.getY() , m_TurretPosition.getX()));

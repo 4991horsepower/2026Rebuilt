@@ -138,7 +138,7 @@ public final class Constants {
 
         public static final double intakeRunSpeed = 30; //Rotations per second
 
-        public static final double intakeOutPos = 56.5; //Rotations
+        public static final double intakeOutPos = 57; //Rotations
         public static final double intakeInPos = 0; //Rotations
         public static final double intakeInterPos = 40;//Rotations
 
@@ -159,7 +159,7 @@ public final class Constants {
 
         public static final IdleMode spinIdleMode = IdleMode.kCoast;
 
-        public static final double spinSpeed = 50;
+        public static final double spinSpeed = 101;
     }
 
     public static final class UptakeConstants{
@@ -173,7 +173,7 @@ public final class Constants {
 
         public static final boolean UpInverted = false;
 
-        public static final double uptakeSpeed = 50;
+        public static final double uptakeSpeed = 111;
     }
 
     public static final class LimelightConstants{
