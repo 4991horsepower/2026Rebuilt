@@ -7,8 +7,13 @@ import java.util.function.Supplier;
 import com.ctre.phoenix6.BaseStatusSignal;
 import com.ctre.phoenix6.StatusSignal;
 import com.ctre.phoenix6.configs.Slot0Configs;
+import com.ctre.phoenix6.configs.SlotConfigs;
+import com.ctre.phoenix6.configs.TalonFXConfigurator;
 import com.ctre.phoenix6.configs.TalonFXSConfigurator;
+import com.ctre.phoenix6.controls.PositionTorqueCurrentFOC;
 import com.ctre.phoenix6.controls.PositionVoltage;
+import com.ctre.phoenix6.controls.VelocityTorqueCurrentFOC;
+import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.hardware.TalonFXS;
 
 import edu.wpi.first.math.geometry.Pose2d;
@@ -16,13 +21,17 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.AimingData;
 import frc.robot.Constants.AimingConstants;
+import frc.robot.Constants.DebugConstants;
 import frc.robot.Constants.LimelightConstants;
+import frc.robot.Constants.ShooterConstants;
 import frc.robot.Constants.TurretConstants;
 
 public class Turret extends SubsystemBase {
@@ -34,8 +43,6 @@ public class Turret extends SubsystemBase {
     private final Slot0Configs m_TurretConfig;
 
     private double setTurretAngle = 0;
-
-    private final Supplier<Pose2d> m_PoseSupplier;
 
     private Transform2d m_TurretPosition;
 
@@ -51,7 +58,36 @@ public class Turret extends SubsystemBase {
 
     private double distance;
 
+    private final TalonFX m_Hood;
+    private final TalonFX m_Wheel;
+
+    private final Supplier<Pose2d> m_PoseSupplier;
+
+    private final SlotConfigs m_hoodConfigs;
+    private final SlotConfigs m_wheelConfigs;
+    private final TalonFXConfigurator m_HoodConfigurator;
+    private final TalonFXConfigurator m_WheelConfigurator;
+
+    private final DigitalInput m_Limit;
+
+    private double setHoodAngle = 0;
+    private double setShooterSpeed = 0;
+
+    private PositionTorqueCurrentFOC positionRequest; 
+    private VelocityTorqueCurrentFOC speedRequest;
+
+    private boolean isHoming = false;
+    private boolean wasResetByLimit = false;
+
+    private boolean shooterOn;
+    private boolean aimedAtTarget;
+
+    private Transform2d robotRelativeToTarget;
+
+    private final AimingData aimingData = new AimingData();
+
     private final Transform2d robotToTurretPivot = new Transform2d(LimelightConstants.kRobotToTurretX, LimelightConstants.kRobotToTurretY, new Rotation2d(0));
+    
 
     public Turret(Supplier<Pose2d> poseSupplier){
         m_Turret = new TalonFXS(TurretConstants.turretCANID,"Default Name");
@@ -73,6 +109,44 @@ public class Turret extends SubsystemBase {
 
         // Match the 250Hz odometry loop
         BaseStatusSignal.setUpdateFrequencyForAll(250, m_positionSignal, m_velocitySignal);
+
+        m_Hood = new TalonFX(ShooterConstants.hoodCANID , "Default Name");
+        m_Wheel = new TalonFX(ShooterConstants.shooterCANID , "Default Name");
+
+        m_Limit = new DigitalInput(9);
+
+        m_HoodConfigurator = m_Hood.getConfigurator();
+        m_WheelConfigurator = m_Wheel.getConfigurator();
+
+        m_hoodConfigs = new SlotConfigs()
+        .withKP(ShooterConstants.hoodkP)
+        .withKI(ShooterConstants.hoodkI)
+        .withKD(ShooterConstants.hoodkD);
+        
+        m_wheelConfigs = new SlotConfigs()
+        .withKP(ShooterConstants.shooterkP)
+        .withKI(ShooterConstants.shooterkI)
+        .withKD(ShooterConstants.shooterkD)
+        .withKV(ShooterConstants.shooterkV)
+        .withKS(ShooterConstants.shooterkS);
+
+
+        positionRequest = new PositionTorqueCurrentFOC(setHoodAngle);
+        speedRequest = new VelocityTorqueCurrentFOC(setShooterSpeed);
+
+        
+        m_HoodConfigurator.apply(m_hoodConfigs);
+        m_WheelConfigurator.apply(m_wheelConfigs);
+
+        if(DebugConstants.Shooter.DebugEnable){
+            SmartDashboard.putNumber("Commanded Hood Angle", setHoodAngle);
+            SmartDashboard.putNumber("Actual Hood Angle", m_Hood.getPosition().getValueAsDouble());
+
+            SmartDashboard.putNumber("Commanded Shooter Speed",setShooterSpeed);
+            SmartDashboard.putNumber("Actual Shooter Speed", m_Wheel.getVelocity().getValueAsDouble());
+        }
+
+    setHoodAngle(setHoodAngle);
     }
 
     public void periodic(){
@@ -124,6 +198,14 @@ if(DriverStation.getAlliance().get() == DriverStation.Alliance.Red){
         setTurretAngle(m_RobotThetaToTarget.getRotations());
 
         distance = Math.sqrt(Math.pow(m_TurretPosition.getX(), 2) +  Math.pow(m_TurretPosition.getY(), 2));
+
+        if(shooterOn && aimedAtTarget){
+            setShooterSpeed(aimingData.getShotSpeed(distance));
+        }
+        else{
+            setShooterSpeed(0);
+        }
+
         SmartDashboard.putNumber("Distance To Target", distance);
 
         SmartDashboard.putNumber("Robot Real Theta", m_PoseSupplier.get().getRotation().getDegrees());
@@ -138,10 +220,10 @@ if(DriverStation.getAlliance().get() == DriverStation.Alliance.Red){
     public void setTurretAngle(double angle){
         //receives angle in rotations
         //Keeps Turret Bound to .75 rotations 
-        if(angle > Units.degreesToRotations(135)) {setTurretAngle = .375;}
-        else if(angle < Units.degreesToRotations(-135)) {setTurretAngle = -.375;}
-        else {setTurretAngle = angle;}
-
+        if(angle > Units.degreesToRotations(135)) {setTurretAngle = .375; aimedAtTarget = false;}
+        else if(angle < Units.degreesToRotations(-135)) {setTurretAngle = -.375; aimedAtTarget = false;}
+        else {setTurretAngle = angle; aimedAtTarget = true;}
+        SmartDashboard.putNumber("Theta to Target (clipped)", Units.rotationsToDegrees(setTurretAngle));
         //Sets Turret position to the converted angle
         m_Turret.setControl(new PositionVoltage(setTurretAngle));
     }
@@ -176,5 +258,65 @@ if(DriverStation.getAlliance().get() == DriverStation.Alliance.Red){
 
     public void stop(){
         setTurretAngle(m_latchedAngle);
+    }
+
+     //Setters
+    public void setHoodAngle(double hoodAngle){
+        //if inputed angle is within bounds set desired hood angle as input otherwise set as closet allowed angle
+        if(hoodAngle > ShooterConstants.maxHoodAngle) {setHoodAngle = ShooterConstants.maxHoodAngle;}
+        else if(hoodAngle < ShooterConstants.minHoodAngle) {setHoodAngle = ShooterConstants.minHoodAngle;}
+        else {setHoodAngle = hoodAngle;}
+        
+        m_Hood.setControl(positionRequest.withPosition(setHoodAngle));
+    }
+
+    public void setShooterSpeed(double speed){
+        setShooterSpeed = speed;
+
+         m_Wheel.setControl(speedRequest.withVelocity(setShooterSpeed));
+    }
+
+    //Stops
+    public void stopHood(){
+        setHoodAngle = m_Hood.getPosition().getValueAsDouble();
+
+        m_Hood.setControl(positionRequest.withPosition(setHoodAngle));
+    }
+
+       //Getters
+    public double getHoodAngle(){
+        //Returns Hood Position in Motor Rotations
+        return m_Hood.getPosition().getValueAsDouble();
+    }
+
+    public double getShooterSpeed(){
+        //returns Shooter speed in RPM
+        return m_Wheel.getVelocity().getValueAsDouble();
+   }
+
+    public boolean isShooterAtSpeed(){
+        //Return true if shooter speed is within allowed error of target
+        //return Math.abs(setShooterSpeed - getShooterSpeed()) < ShooterConstants.kShooterMaxAllVelErr;
+        return true;
+    }
+
+    public boolean isHoodAtAngle(){
+        //Returns true if hood angle is within allowed error of target
+        return Math.abs(setHoodAngle - getHoodAngle()) < ShooterConstants.kHoodMaxAllPosErr;
+    }
+
+    private void zeroHoodOnLimitSwitch() {
+        if (!wasResetByLimit && m_Limit.get()) {
+          // Zero the encoder only when the limit switch is switches from "unpressed" to "pressed" to
+          // prevent constant zeroing while pressed
+          wasResetByLimit = true;
+          m_Hood.setPosition(0);
+        } else if (!(m_Limit.get())) {
+          wasResetByLimit = false;
+        }
+    }
+
+    public void toggleShooter(){
+        shooterOn = !shooterOn;
     }
 }

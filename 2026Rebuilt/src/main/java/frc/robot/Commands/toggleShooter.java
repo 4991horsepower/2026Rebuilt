@@ -1,13 +1,13 @@
 package frc.robot.Commands;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.subsystems.Shooter;
+import frc.robot.subsystems.Turret;
 
-public class stopShooter extends Command {
+public class toggleShooter extends Command {
 
-    private Shooter m_Shooter;
+    private Turret m_Shooter;
 
-    public stopShooter(Shooter shooter){
+    public toggleShooter(Turret shooter){
         m_Shooter = shooter;
 
         addRequirements(shooter);
@@ -15,7 +15,7 @@ public class stopShooter extends Command {
 
     @Override
     public void execute(){
-        m_Shooter.setShooterSpeed(0);
+        m_Shooter.toggleShooter();
     }
     
 }
