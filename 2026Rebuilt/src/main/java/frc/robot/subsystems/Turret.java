@@ -36,9 +36,7 @@ public class Turret extends SubsystemBase {
 
     private Rotation2d m_RobotThetaToTarget;
 
-    private Pose2d target = AimingConstants.hub;
-
-    private Pose2d m_TestPose;
+    private Pose2d target;
 
     public Turret(Supplier<Pose2d> poseSupplier){
         m_Turret = new TalonFXS(TurretConstants.turretCANID,"Default Name");
@@ -60,6 +58,21 @@ public class Turret extends SubsystemBase {
         public void periodic(){
             Pose2d robot_pose = m_PoseSupplier.get();
 
+            //Target Selction
+            //If Robot's x is greater than shooting area set target as wall
+            if(robot_pose.getX() > AimingConstants.edgeOfShootingArea){
+                //set wall side based on Robot Y
+                if(robot_pose.getY() > AimingConstants.midFieldSplit){
+                    target = AimingConstants.leftWall;
+                }
+                else{
+                    target = AimingConstants.rightWall;
+                }
+            }
+            else{
+                target = AimingConstants.hub;
+            }
+
             //Get robot Position Relative to target
             m_TurretPosition = robot_pose.minus(target).inverse();
 
@@ -69,9 +82,9 @@ public class Turret extends SubsystemBase {
             setTurretAngle(m_RobotThetaToTarget.getRotations());
 
             SmartDashboard.putNumber("Robot Real Theta", m_PoseSupplier.get().getRotation().getDegrees());
-            SmartDashboard.putNumber("Robot X", m_TurretPosition.getX());
-            SmartDashboard.putNumber("Robot Y", m_TurretPosition.getY());
-            SmartDashboard.putNumber("Robot Theta", m_TurretPosition.getRotation().getDegrees());
+            SmartDashboard.putNumber("Robot X", robot_pose.getX());
+            SmartDashboard.putNumber("Robot Y", robot_pose.getY());
+            SmartDashboard.putNumber("Robot Theta", robot_pose.getRotation().getDegrees());
             SmartDashboard.putNumber("Target Relative Theta", m_TurretPosition.getRotation().getDegrees());
             SmartDashboard.putNumber("Theta to Target", m_RobotThetaToTarget.getDegrees());
             SmartDashboard.putNumber("Turret Angle", getTurretAngle());
