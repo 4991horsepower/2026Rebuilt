@@ -146,6 +146,8 @@ public final class Constants {
         public static final double intakeInterPos = 40;//Rotations
 
         public static final double intakeMaxAllErr = .1; // Rotations
+
+        public static final double kHomingVolts = 4;
     }
 
     public static final class SpindexerConstants{
