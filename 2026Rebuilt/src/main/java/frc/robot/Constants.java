@@ -18,31 +18,60 @@ public final class Constants {
 
        
     }
-    public static final class AimingConstants{
-        public static final double edgeOfShootingArea = 0;//Meters From Origin // Splits field accross bump for decidng if aiming for hub or at player wall
+    public final class AimingConstants{
+        public static class Blue{
+            public static final double edgeOfShootingArea = 0;//Meters From Origin // Splits field accross bump for decidng if aiming for hub or at player wall
 
-        public static final double midFieldSplit = Units.inchesToMeters(158.84);//Meters from origin //Splits Neutral Zone for detirmining if aiming at left or right side of hub
+            public static final double midFieldSplit = Units.inchesToMeters(158.84);//Meters from origin //Splits Neutral Zone for detirmining if aiming at left or right side of hub
 
-        public static final Pose2d hub = new Pose2d(
-            Units.inchesToMeters(182.11),
-            midFieldSplit,
-            new Rotation2d(0));
+            public static final Pose2d hub = new Pose2d(
+                Units.inchesToMeters(182.11),
+                midFieldSplit,
+                new Rotation2d(0));
 
-        //.5 meter from driver station wall and 3/4 of total field length from conner
-        public static final Pose2d leftWall = new Pose2d(
-            .5,
-            midFieldSplit + (midFieldSplit/2),
-            new Rotation2d(0));
+            //.5 meter from driver station wall and 3/4 of total field length from conner
+            public static final Pose2d leftWall = new Pose2d(
+                .5,
+                midFieldSplit + (midFieldSplit/2),
+                new Rotation2d(0));
 
-        //.5 meter from driver station wall and 3/4 of total field length from conner
-        public static final Pose2d rightWall = new Pose2d(
-            0.5,
-            midFieldSplit/2,
-            new Rotation2d(0));
-        
-        public static final double launchSpeed = 10;//meters/sec //assuming relativily constant launch speed //Needs Tuned
+            //.5 meter from driver station wall and 3/4 of total field length from conner
+            public static final Pose2d rightWall = new Pose2d(
+                0.5,
+                midFieldSplit/2,
+                new Rotation2d(0));
+            
+            public static final double launchSpeed = 10;//meters/sec //assuming relativily constant launch speed //Needs Tuned
 
-        public static final double turretHeight = Units.inchesToMeters(21);//Meters off of Floor //Needs Tuned
+            public static final double turretHeight = Units.inchesToMeters(21);//Meters off of Floor //Needs Tuned
+        }
+
+        public static class Red{
+            public static final double edgeOfShootingArea = 0;//Meters From Origin // Splits field accross bump for decidng if aiming for hub or at player wall
+
+            public static final double midFieldSplit = Units.inchesToMeters(158.84);//Meters from origin //Splits Neutral Zone for detirmining if aiming at left or right side of hub
+
+            public static final Pose2d hub = new Pose2d(
+                Units.inchesToMeters(469.11),
+                midFieldSplit,
+                new Rotation2d(0));
+
+            //.5 meter from driver station wall and 3/4 of total field length from conner
+            public static final Pose2d rightWall = new Pose2d(
+                16.040988,
+                midFieldSplit + (midFieldSplit/2),
+                new Rotation2d(0));
+
+            //.5 meter from driver station wall and 3/4 of total field length from conner
+            public static final Pose2d leftWall = new Pose2d(
+                16.040988,
+                midFieldSplit/2,
+                new Rotation2d(0));
+            
+            public static final double launchSpeed = 10;//meters/sec //assuming relativily constant launch speed //Needs Tuned
+
+            public static final double turretHeight = Units.inchesToMeters(21);//Meters off of Floor //Needs Tuned
+        }
     }
 
     public static final class ShooterConstants{

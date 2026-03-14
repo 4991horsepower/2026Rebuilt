@@ -15,6 +15,8 @@ import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.AimingConstants;
@@ -59,20 +61,37 @@ public class Turret extends SubsystemBase {
             Pose2d robot_pose = m_PoseSupplier.get();
 
             //Target Selction
-            //If Robot's x is greater than shooting area set target as wall
-            if(robot_pose.getX() > AimingConstants.edgeOfShootingArea){
-                //set wall side based on Robot Y
-                if(robot_pose.getY() > AimingConstants.midFieldSplit){
-                    target = AimingConstants.leftWall;
+            if(DriverStation.getAlliance().get() == DriverStation.Alliance.Red)
+            {
+                //If Robot's x is greater than shooting area set target as wall
+                if(robot_pose.getX() > AimingConstants.Red.edgeOfShootingArea){
+                    //set wall side based on Robot Y
+                    if(robot_pose.getY() > AimingConstants.Red.midFieldSplit){
+                        target = AimingConstants.Red.leftWall;
+                    }
+                    else{
+                        target = AimingConstants.Red.rightWall;
+                    }
                 }
                 else{
-                    target = AimingConstants.rightWall;
+                    target = AimingConstants.Red.hub;
                 }
             }
             else{
-                target = AimingConstants.hub;
-            }
-
+                //If Robot's x is greater than shooting area set target as wall
+                if(robot_pose.getX() > AimingConstants.Blue.edgeOfShootingArea){
+                    //set wall side based on Robot Y
+                    if(robot_pose.getY() > AimingConstants.Blue.midFieldSplit){
+                        target = AimingConstants.Blue.leftWall;
+                    }
+                    else{
+                        target = AimingConstants.Blue.rightWall;
+                    }
+                }
+                else{
+                    target = AimingConstants.Blue.hub;
+                }
+            }   
             //Get robot Position Relative to target
             m_TurretPosition = robot_pose.minus(target).inverse();
 

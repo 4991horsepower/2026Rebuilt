@@ -42,7 +42,7 @@ public class Shooter extends SubsystemBase {
     private boolean isHoming = false;
     private boolean wasResetByLimit = false;
 
-    private Pose2d target = AimingConstants.hub;
+    private Pose2d target = AimingConstants.Blue.hub;
 
     private Pose2d robotRelativeToTarget = new Pose2d();
     private double distance = 0;
