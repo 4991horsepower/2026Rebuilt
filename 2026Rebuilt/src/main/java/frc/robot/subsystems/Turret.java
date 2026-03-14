@@ -48,6 +48,8 @@ public class Turret extends SubsystemBase {
     private volatile double m_latchedAngle = 0;
     private volatile double m_latchedVelocity = 0;
 
+    private double distance;
+
     public Turret(Supplier<Pose2d> poseSupplier){
         m_Turret = new TalonFXS(TurretConstants.turretCANID,"Default Name");
 
@@ -74,45 +76,52 @@ public class Turret extends SubsystemBase {
         Pose2d robot_pose = m_PoseSupplier.get();
 
         //Target Selction
-        if(DriverStation.getAlliance().get() == DriverStation.Alliance.Red)
-        {
-            //If Robot's x is greater than shooting area set target as wall
-            if(robot_pose.getX() > AimingConstants.Red.edgeOfShootingArea){
-                //set wall side based on Robot Y
-                if(robot_pose.getY() > AimingConstants.Red.midFieldSplit){
-                    target = AimingConstants.Red.leftWall;
-                }
-                else{
-                    target = AimingConstants.Red.rightWall;
-                }
-            }
+if(DriverStation.getAlliance().get() == DriverStation.Alliance.Red){
+           //If Robot's x is greater than shooting area set target as wall
+           if(robot_pose.getX() < AimingConstants.Red.edgeOfShootingArea){
+            //set wall side based on Robot Y                    
+            if(robot_pose.getY() > AimingConstants.Red.midFieldSplit){
+              target = AimingConstants.Red.leftWall;
+                //System.out.println("Target Red Left Wall");
+                  }
             else{
-                target = AimingConstants.Red.hub;
-            }
-        }
-        else{
-            //If Robot's x is greater than shooting area set target as wall
-            if(robot_pose.getX() > AimingConstants.Blue.edgeOfShootingArea){
-                //set wall side based on Robot Y
-                if(robot_pose.getY() > AimingConstants.Blue.midFieldSplit){
-                    target = AimingConstants.Blue.leftWall;
+                target = AimingConstants.Red.rightWall;
+                //System.out.println("Target Red Right Wall");
                 }
-                else{
-                    target = AimingConstants.Blue.rightWall;
+              }
+              else{
+                  target = AimingConstants.Red.hub;
+                  //System.out.println("Target Red Hub");
                 }
-            }
-            else{
-                target = AimingConstants.Blue.hub;
-            }
-        }   
+              }
+          else{
+              //If Robot's x is greater than shooting area set target as wall
+              if(robot_pose.getX() > AimingConstants.Blue.edgeOfShootingArea){
+                  //set wall side based on Robot Y
+                  if(robot_pose.getY() > AimingConstants.Blue.midFieldSplit){
+                      target = AimingConstants.Blue.leftWall;
+                      //System.out.println("Target Blue Wall");
+                  }
+                  else{
+                      target = AimingConstants.Blue.rightWall;
+                      //System.out.println("Target Blue Wall");
+                   }
+               }
+              else{
+                  target = AimingConstants.Blue.hub;
+                  //System.out.println("Target Blue Hub");
+               }
+          }   
         //Get robot Position Relative to target
         m_TurretPosition = robot_pose.minus(target).inverse();
 
         //Get angle to target
         m_RobotThetaToTarget = new Rotation2d(Math.atan2(m_TurretPosition.getY() , m_TurretPosition.getX()));
 
-        setTurretAngle(0.25);
-        //setTurretAngle(m_RobotThetaToTarget.getRotations());
+        setTurretAngle(m_RobotThetaToTarget.getRotations());
+
+        distance = Math.sqrt(Math.pow(m_TurretPosition.getX(), 2) +  Math.pow(m_TurretPosition.getY(), 2));
+        SmartDashboard.putNumber("Distance To Target", distance);
 
         SmartDashboard.putNumber("Robot Real Theta", m_PoseSupplier.get().getRotation().getDegrees());
         SmartDashboard.putNumber("Robot X", robot_pose.getX());

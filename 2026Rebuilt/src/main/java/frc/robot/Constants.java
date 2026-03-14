@@ -17,7 +17,7 @@ public final class Constants {
     }
     public final class AimingConstants{
         public static class Blue{
-            public static final double edgeOfShootingArea = 0;//Meters From Origin // Splits field accross bump for decidng if aiming for hub or at player wall
+            public static final double edgeOfShootingArea = Units.inchesToMeters(182.11);//Meters From Origin // Splits field accross bump for decidng if aiming for hub or at player wall
 
             public static final double midFieldSplit = Units.inchesToMeters(158.84);//Meters from origin //Splits Neutral Zone for detirmining if aiming at left or right side of hub
 
@@ -44,7 +44,7 @@ public final class Constants {
         }
 
         public static class Red{
-            public static final double edgeOfShootingArea = 0;//Meters From Origin // Splits field accross bump for decidng if aiming for hub or at player wall
+            public static final double edgeOfShootingArea = Units.inchesToMeters(469.11);//Meters From Origin // Splits field accross bump for decidng if aiming for hub or at player wall
 
             public static final double midFieldSplit = Units.inchesToMeters(158.84);//Meters from origin //Splits Neutral Zone for detirmining if aiming at left or right side of hub
 

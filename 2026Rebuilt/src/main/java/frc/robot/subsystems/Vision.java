@@ -99,7 +99,7 @@ private final TimeInterpolatableBuffer<Transform2d> m_transformBuffer =
             // StdDevs: Trust vision less if distance is high or tag count is low
             double stdDev = (mt2.tagCount > 1) ? 0.5 : 1.0;
             
-            System.out.println("Vision Measurement: " + correctedRobotPose);
+            //System.out.println("Vision Measurement: " + correctedRobotPose);
 
             m_drivetrain.addVisionMeasurement(
                 correctedRobotPose, 

@@ -94,17 +94,20 @@ public class Shooter extends SubsystemBase {
         //Target Selction
         if(DriverStation.getAlliance().get() == DriverStation.Alliance.Red){
            //If Robot's x is greater than shooting area set target as wall
-           if(robot_pose.getX() > AimingConstants.Red.edgeOfShootingArea){
+           if(robot_pose.getX() < AimingConstants.Red.edgeOfShootingArea){
             //set wall side based on Robot Y                    
             if(robot_pose.getY() > AimingConstants.Red.midFieldSplit){
               target = AimingConstants.Red.leftWall;
+                //System.out.println("Target Left Wall");
                   }
-                  else{
-                      target = AimingConstants.Red.rightWall;
-                  }
+            else{
+                target = AimingConstants.Red.rightWall;
+                //System.out.println("Target Right Wall");
+                }
               }
               else{
                   target = AimingConstants.Red.hub;
+                  //System.out.println("Target Hub");
                 }
               }
           else{
@@ -113,20 +116,24 @@ public class Shooter extends SubsystemBase {
                   //set wall side based on Robot Y
                   if(robot_pose.getY() > AimingConstants.Blue.midFieldSplit){
                       target = AimingConstants.Blue.leftWall;
+                      //System.out.println("Target Wall");
                   }
                   else{
                       target = AimingConstants.Blue.rightWall;
+                      //System.out.println("Target Wall");
                    }
                }
               else{
                   target = AimingConstants.Blue.hub;
+                  //System.out.println("Target Hub");
                }
           }   
         //Convert Robot Position Realitive to target
         robotRelativeToTarget = m_PoseSupplier.get().relativeTo(target);
         //Using Relative Position find the distance to the target and calculate launch speed based on table values
-        distance = Math.sqrt(Math.pow(robotRelativeToTarget.getX(), 2) +  Math.pow(robotRelativeToTarget.getY(), 2));
-        SmartDashboard.putNumber("Distance To Target", distance);
+
+        SmartDashboard.putNumber("Relative X", robotRelativeToTarget.getX());
+        SmartDashboard.putNumber("Relative Y", robotRelativeToTarget.getY());
         //If the Shooter is active and at speed send true to SmartDashboard
         SmartDashboard.putBoolean("Ready to Fire", isShooterAtSpeed() && setShooterSpeed > 0);
 
