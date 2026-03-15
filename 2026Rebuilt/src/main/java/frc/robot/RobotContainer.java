@@ -45,7 +45,7 @@ public class RobotContainer {
   private final Intake m_intake = new Intake();
   private final Spindexer m_Spindexer = new Spindexer();
   private final Uptake m_Uptake = new Uptake();
-  private final Turret m_Turret = new Turret(m_Drive.getPoseSupplier());
+  private final Turret m_Turret = new Turret(m_Drive.getPoseSupplier(), m_Drive.getVelocitySupplier());
   private final Vision m_Vision = new Vision(m_Drive, m_Turret);
   private final Telemetry logger = new Telemetry(MaxSpeed);
 
@@ -115,7 +115,7 @@ public class RobotContainer {
         m_DriverController.back().onTrue(m_intake.runOnce(() -> m_intake.homeIntake()));
 
         //Shooter Controls
-        m_DriverController.start().onChange(new toggleShooter(m_Turret));
+        m_DriverController.start().onTrue(new InstantCommand(() -> m_Turret.toggleShooter()));
 
         //While trigger is held fire balls
         m_DriverController.leftTrigger(.5)

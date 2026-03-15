@@ -62,6 +62,7 @@ public class Turret extends SubsystemBase {
     private final TalonFX m_Wheel;
 
     private final Supplier<Pose2d> m_PoseSupplier;
+    private final Supplier<Pose2d> m_VelocitySupplier;
 
     private final SlotConfigs m_hoodConfigs;
     private final SlotConfigs m_wheelConfigs;
@@ -74,15 +75,15 @@ public class Turret extends SubsystemBase {
     private PositionTorqueCurrentFOC positionRequest; 
     private VelocityTorqueCurrentFOC speedRequest;
 
-    private boolean shooterOn;
-    private boolean aimedAtTarget;
+    private boolean shooterOn = true;
+    private boolean aimedAtTarget = true;
 
     private final AimingData aimingData = new AimingData();
 
     private final Transform2d robotToTurretPivot = new Transform2d(LimelightConstants.kRobotToTurretX, LimelightConstants.kRobotToTurretY, new Rotation2d(0));
     
 
-    public Turret(Supplier<Pose2d> poseSupplier){
+    public Turret(Supplier<Pose2d> poseSupplier, Supplier<Pose2d> velocitySupplier){
         m_Turret = new TalonFXS(TurretConstants.turretCANID,"Default Name");
 
         m_TurretConfigurator = m_Turret.getConfigurator();
@@ -96,6 +97,7 @@ public class Turret extends SubsystemBase {
 
         m_Turret.setControl(new PositionVoltage(0));
         m_PoseSupplier = poseSupplier;
+        m_VelocitySupplier = velocitySupplier;
 
         m_positionSignal = m_Turret.getPosition();
         m_velocitySignal = m_Turret.getVelocity();
@@ -179,9 +181,19 @@ public class Turret extends SubsystemBase {
                 target = AimingConstants.Blue.hub;
                 setHoodAngle(0);
             }
-          }   
+          } 
+
+        double shot_time = aimingData.getShotTime(distance);
+
+        Pose2d lookahead = m_VelocitySupplier.get().times(shot_time);
+        Transform2d lookahead_translation = new Transform2d(0, 0, /*-lookahead.getX(), -lookahead.getY(),*/ new Rotation2d());
+
+        //System.out.println("X: " + m_VelocitySupplier.get().getX());
+        //System.out.println("Y: " + m_VelocitySupplier.get().getY());
+
+
         //Get robot Position Relative to target
-        m_TurretPosition = robot_pose.plus(robotToTurretPivot).minus(target).inverse();
+        m_TurretPosition = (robot_pose.plus(robotToTurretPivot).plus(lookahead_translation)).minus(target).inverse();
 
         //Get angle to target
         m_RobotThetaToTarget = new Rotation2d(Math.atan2(m_TurretPosition.getY() , m_TurretPosition.getX()));
@@ -206,6 +218,8 @@ public class Turret extends SubsystemBase {
         SmartDashboard.putNumber("Target Relative Theta", m_TurretPosition.getRotation().getDegrees());
         SmartDashboard.putNumber("Theta to Target", m_RobotThetaToTarget.getDegrees());
         SmartDashboard.putNumber("Turret Angle", getTurretAngle());
+        SmartDashboard.putNumber("Target X", target.getX());
+        SmartDashboard.putNumber("Target Y", target.getY());
     }
 
     public void setTurretAngle(double angle){

@@ -283,6 +283,16 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         };
     }
 
+    public Supplier<Pose2d> getVelocitySupplier(){
+        return () -> {
+            SwerveDriveState state = this.getState();
+            return new Pose2d(
+                state.Speeds.vxMetersPerSecond * state.Pose.getRotation().getCos() + state.Speeds.vyMetersPerSecond * state.Pose.getRotation().getSin(),
+                state.Speeds.vxMetersPerSecond * state.Pose.getRotation().getSin() + state.Speeds.vyMetersPerSecond * state.Pose.getRotation().getCos(),
+                new Rotation2d(state.Speeds.omegaRadiansPerSecond));
+        };
+    }
+
     @Override
     public void periodic() {
         /*
