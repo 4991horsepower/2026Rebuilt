@@ -59,7 +59,7 @@ public class TunerConstants {
             .withCurrentLimits(
             new CurrentLimitsConfigs()
 //Test to help lessen brownout coditions
-                .withStatorCurrentLimit(Amps.of(60))
+                .withStatorCurrentLimit(Amps.of(120))
                 .withStatorCurrentLimitEnable(true)
                 .withSupplyCurrentLimit(Amp.of(40))
                 .withSupplyCurrentLimitEnable(true)
