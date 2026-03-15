@@ -57,7 +57,8 @@ public class RobotContainer {
     });
     NamedCommands.registerCommand("Intake Out", new IntakeOut(m_intake));
     NamedCommands.registerCommand("Internal In", new SpindexerDrive(m_Spindexer).alongWith(new UptakeUp(m_Uptake)));
-    NamedCommands.registerCommand("Intake Inter", getAutonomousCommand());
+    NamedCommands.registerCommand("Intake Inter", new IntakeInter(m_intake));
+    NamedCommands.registerCommand("Internal Stop", new SpindexerStop(m_Spindexer).alongWith(new UptakeStop(m_Uptake)));
 
     configureBindings();
   }
