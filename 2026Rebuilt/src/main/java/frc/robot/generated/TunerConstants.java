@@ -24,13 +24,13 @@ public class TunerConstants {
     // The steer motor uses any SwerveModule.SteerRequestType control request with the
     // output type specified by SwerveModuleConstants.SteerMotorClosedLoopOutput
     private static final Slot0Configs steerGains = new Slot0Configs()
-        .withKP(100).withKI(0).withKD(0.5)
-        .withKS(0.1).withKV(2.33).withKA(0)
+        .withKP(500).withKI(0.0).withKD(.5)
+        .withKS(0.2).withKV(3).withKA(0)
         .withStaticFeedforwardSign(StaticFeedforwardSignValue.UseClosedLoopSign);
     // When using closed-loop control, the drive motor uses the control
     // output type specified by SwerveModuleConstants.DriveMotorClosedLoopOutput
     private static final Slot0Configs driveGains = new Slot0Configs()
-        .withKP(0.1).withKI(0).withKD(0)
+        .withKP(.5).withKI(0).withKD(0)
         .withKS(0).withKV(0.124);
 
     // The closed-loop output type to use for the steer motors;
@@ -58,8 +58,8 @@ public class TunerConstants {
     private static final TalonFXConfiguration driveInitialConfigs = new TalonFXConfiguration()
             .withCurrentLimits(
             new CurrentLimitsConfigs()
-//Test to help lessen brownout coditions
-                .withStatorCurrentLimit(Amps.of(120))
+//Test to help lessen brownout 
+                .withStatorCurrentLimit(Amps.of(70))
                 .withStatorCurrentLimitEnable(true)
                 .withSupplyCurrentLimit(Amp.of(40))
                 .withSupplyCurrentLimitEnable(true)
@@ -93,7 +93,7 @@ public class TunerConstants {
 
     private static final double kDriveGearRatio = 5.902777777777778;
     private static final double kSteerGearRatio = 18.75;
-    private static final Distance kWheelRadius = Inches.of(3);
+    private static final Distance kWheelRadius = Inches.of(2.75);
 
     private static final boolean kInvertLeftSide = false;
     private static final boolean kInvertRightSide = true;

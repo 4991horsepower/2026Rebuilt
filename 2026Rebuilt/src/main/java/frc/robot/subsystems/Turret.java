@@ -75,7 +75,7 @@ public class Turret extends SubsystemBase {
     private PositionTorqueCurrentFOC positionRequest; 
     private VelocityTorqueCurrentFOC speedRequest;
 
-    private boolean shooterOn = true;
+    private boolean shooterOn = false;
     private boolean aimedAtTarget = true;
 
     private final AimingData aimingData = new AimingData();
