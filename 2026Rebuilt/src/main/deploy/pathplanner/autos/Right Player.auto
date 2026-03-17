@@ -11,26 +11,13 @@
               {
                 "type": "named",
                 "data": {
-                  "name": "Intake Out"
+                  "name": "Internal In"
                 }
               },
               {
-                "type": "sequential",
+                "type": "named",
                 "data": {
-                  "commands": [
-                    {
-                      "type": "wait",
-                      "data": {
-                        "waitTime": 0.5
-                      }
-                    },
-                    {
-                      "type": "named",
-                      "data": {
-                        "name": "Internal In"
-                      }
-                    }
-                  ]
+                  "name": "Intake Out"
                 }
               }
             ]
@@ -39,13 +26,25 @@
         {
           "type": "wait",
           "data": {
-            "waitTime": 2.0
+            "waitTime": 5.0
           }
         },
         {
           "type": "parallel",
           "data": {
             "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "Right Player Pickup"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Intake Inter"
+                }
+              },
               {
                 "type": "named",
                 "data": {
@@ -56,34 +55,15 @@
           }
         },
         {
-          "type": "path",
-          "data": {
-            "pathName": "Right Mid Collection Pass"
-          }
-        },
-        {
           "type": "wait",
           "data": {
-            "waitTime": 0.5
+            "waitTime": 3.0
           }
         },
         {
-          "type": "parallel",
+          "type": "path",
           "data": {
-            "commands": [
-              {
-                "type": "named",
-                "data": {
-                  "name": "Intake Inter"
-                }
-              },
-              {
-                "type": "path",
-                "data": {
-                  "pathName": "Right Bump Path"
-                }
-              }
-            ]
+            "pathName": "Player To Shot"
           }
         },
         {

@@ -3,37 +3,32 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 7.804924242424242,
-        "y": 3.3456912878787888
+        "x": 0.59625,
+        "y": 0.6050662878787887
       },
       "prevControl": null,
       "nextControl": {
-        "x": 7.170131834357813,
-        "y": 3.012156293809986
+        "x": 0.9106827826621933,
+        "y": 0.6793567727147866
       },
       "isLocked": false,
-      "linkedName": "Left Collection End"
+      "linkedName": "Player"
     },
     {
       "anchor": {
-        "x": 2.9334400948991703,
-        "y": 2.469537366548043
+        "x": 1.659280303030303,
+        "y": 1.4853882575757564
       },
       "prevControl": {
-        "x": 4.870094899169633,
-        "y": 2.587888493475682
+        "x": 0.6095207750637799,
+        "y": 0.7002271813944768
       },
       "nextControl": null,
       "isLocked": false,
       "linkedName": null
     }
   ],
-  "rotationTargets": [
-    {
-      "waypointRelativePos": 0.3285968028419186,
-      "rotationDegrees": 45.0
-    }
-  ],
+  "rotationTargets": [],
   "constraintZones": [],
   "pointTowardsZones": [],
   "eventMarkers": [],
@@ -46,14 +41,14 @@
     "unlimited": false
   },
   "goalEndState": {
-    "velocity": 0,
-    "rotation": 45.0
+    "velocity": 0.0,
+    "rotation": 135.0
   },
   "reversed": false,
   "folder": "Right Paths",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": 90.0
+    "rotation": 180.0
   },
   "useDefaultConstraints": true
 }

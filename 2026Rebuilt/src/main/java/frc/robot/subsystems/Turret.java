@@ -2,10 +2,12 @@ package frc.robot.subsystems;
 
 
 
+import java.util.function.BooleanSupplier;
 import java.util.function.Supplier;
 
 import com.ctre.phoenix6.BaseStatusSignal;
 import com.ctre.phoenix6.StatusSignal;
+import com.ctre.phoenix6.configs.ExternalFeedbackConfigs;
 import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.configs.SlotConfigs;
 import com.ctre.phoenix6.configs.TalonFXConfigurator;
@@ -15,6 +17,8 @@ import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.controls.VelocityTorqueCurrentFOC;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.hardware.TalonFXS;
+import com.ctre.phoenix6.signals.ExternalFeedbackSensorSourceValue;
+import com.ctre.phoenix6.signals.FeedbackSensorSourceValue;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -75,7 +79,7 @@ public class Turret extends SubsystemBase {
     private PositionTorqueCurrentFOC positionRequest; 
     private VelocityTorqueCurrentFOC speedRequest;
 
-    private boolean shooterOn = false;
+    private boolean shooterOn = true;
     private boolean aimedAtTarget = true;
 
     private final AimingData aimingData = new AimingData();
@@ -88,12 +92,18 @@ public class Turret extends SubsystemBase {
 
         m_TurretConfigurator = m_Turret.getConfigurator();
 
+        ExternalFeedbackConfigs m_EncoderConfig = new ExternalFeedbackConfigs()
+        .withExternalFeedbackSensorSource(ExternalFeedbackSensorSourceValue.PulseWidth);
+
         m_TurretConfig = new Slot0Configs()
         .withKP(TurretConstants.turretkP)
         .withKI(TurretConstants.turretkI)
         .withKD(TurretConstants.turretkD);
 
+        
+
         m_TurretConfigurator.apply(m_TurretConfig);
+        m_TurretConfigurator.apply(m_EncoderConfig);
 
         m_Turret.setControl(new PositionVoltage(0));
         m_PoseSupplier = poseSupplier;
@@ -139,6 +149,8 @@ public class Turret extends SubsystemBase {
             SmartDashboard.putNumber("Actual Shooter Speed", m_Wheel.getVelocity().getValueAsDouble());
         }
 
+        m_Turret.setPosition(m_Turret.getPosition().getValueAsDouble() % 1);
+
     setHoodAngle(setHoodAngle);
     }
 
@@ -150,7 +162,7 @@ public class Turret extends SubsystemBase {
            //If Robot's x is greater than shooting area set target as wall
            if(robot_pose.getX() < AimingConstants.Red.edgeOfShootingArea){
             //set wall side based on Robot Y                    
-            if(robot_pose.getY() > AimingConstants.Red.midFieldSplit){
+            if(robot_pose.getY() < AimingConstants.Red.midFieldSplit){
                 target = AimingConstants.Red.leftWall;
                 setHoodAngle(6);
             }
@@ -208,6 +220,7 @@ public class Turret extends SubsystemBase {
         else{
             setShooterSpeed(0);
         }
+
 
         SmartDashboard.putNumber("Distance To Target", distance);
 
@@ -299,10 +312,11 @@ public class Turret extends SubsystemBase {
         return m_Wheel.getVelocity().getValueAsDouble();
    }
 
-    public boolean isShooterAtSpeed(){
+    public BooleanSupplier isShooterAtSpeed(){
         //Return true if shooter speed is within allowed error of target
-        //return Math.abs(setShooterSpeed - getShooterSpeed()) < ShooterConstants.kShooterMaxAllVelErr;
-        return true;
+        return () -> {
+            return (Math.abs(setShooterSpeed - getShooterSpeed())) < ShooterConstants.kShooterMaxAllVelErr && shooterOn;
+        };
     }
 
     public boolean isHoodAtAngle(){

@@ -118,6 +118,6 @@ public class Intake extends SubsystemBase {
     }
 
     public boolean getDone(){
-        return  Math.abs(m_LinEncoder.getPosition() - setPos) < IntakeConstants.intakeMaxAllErr;
+        return  true;
     }
 }

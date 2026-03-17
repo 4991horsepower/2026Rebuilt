@@ -17,6 +17,8 @@ import static edu.wpi.first.units.Units.MetersPerSecond;
 import static edu.wpi.first.units.Units.RadiansPerSecond;
 import static edu.wpi.first.units.Units.RotationsPerSecond;
 
+import java.util.function.BooleanSupplier;
+
 import com.ctre.phoenix6.swerve.SwerveRequest;
 import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
 import com.pathplanner.lib.auto.AutoBuilder;
@@ -25,6 +27,7 @@ import com.pathplanner.lib.commands.FollowPathCommand;
 
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.RobotModeTriggers;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 
 import frc.robot.subsystems.*;
@@ -122,12 +125,14 @@ public class RobotContainer {
         m_DriverController.x().onChange(new IntakeOut(m_intake));
         m_DriverController.b().onChange(new IntakeIn(m_intake));
         m_DriverController.back().onTrue(m_intake.runOnce(() -> m_intake.homeIntake()));
+        m_DriverController.y().onTrue(new IntakeInter(m_intake));
 
         //Shooter Controls
         m_DriverController.start().onTrue(new InstantCommand(() -> m_Turret.toggleShooter()));
 
         //While trigger is held fire balls
         m_DriverController.leftTrigger(.5)
+        .and(m_Turret.isShooterAtSpeed())
         .toggleOnTrue(new SpindexerDrive(m_Spindexer)
         .alongWith(new UptakeUp(m_Uptake))
         );

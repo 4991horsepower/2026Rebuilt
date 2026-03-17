@@ -18,4 +18,9 @@ public class SpindexerStop extends Command {
     public void execute() {
         m_Spindexer.setSpeed(0);
     }
+
+    @Override 
+    public boolean isFinished() {
+        return true;
+    }
 }

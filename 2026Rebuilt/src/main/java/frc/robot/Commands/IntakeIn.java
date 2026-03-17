@@ -20,6 +20,6 @@ public void execute(){
 
 @Override 
 public boolean isFinished() {
-    return m_intake.getDone();
+    return true;
 }
 }

@@ -18,4 +18,9 @@ public class SpindexerDrive extends Command {
     public void execute() {
         m_Spindexer.setSpeed(SpindexerConstants.spinSpeed);
     }
+
+    @Override 
+    public boolean isFinished() {
+        return true;
+    }
 }

@@ -17,7 +17,7 @@ public final class Constants {
     }
     public final class AimingConstants{
         public static class Blue{
-            public static final double edgeOfShootingArea = Units.inchesToMeters(182.11);//Meters From Origin // Splits field accross bump for decidng if aiming for hub or at player wall
+            public static final double edgeOfShootingArea = Units.inchesToMeters(200.);//Meters From Origin // Splits field accross bump for decidng if aiming for hub or at player wall
 
             public static final double midFieldSplit = Units.inchesToMeters(158.84);//Meters from origin //Splits Neutral Zone for detirmining if aiming at left or right side of hub
 
@@ -44,7 +44,7 @@ public final class Constants {
         }
 
         public static class Red{
-            public static final double edgeOfShootingArea = Units.inchesToMeters(469.11);//Meters From Origin // Splits field accross bump for decidng if aiming for hub or at player wall
+            public static final double edgeOfShootingArea = Units.inchesToMeters(440);//Meters From Origin // Splits field accross bump for decidng if aiming for hub or at player wall
 
             public static final double midFieldSplit = Units.inchesToMeters(158.84);//Meters from origin //Splits Neutral Zone for detirmining if aiming at left or right side of hub
 
@@ -138,9 +138,9 @@ public final class Constants {
 
         public static final double intakeRunSpeed = 42; //Rotations per second
 
-        public static final double intakeOutPos = 57; //Rotations
+        public static final double intakeOutPos = 56.66; //Rotations
         public static final double intakeInPos = 0; //Rotations
-        public static final double intakeInterPos = 40;//Rotations
+        public static final double intakeInterPos = 30;//Rotations
 
         public static final double intakeMaxAllErr = .1; // Rotations
 

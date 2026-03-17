@@ -16,4 +16,9 @@ public class UptakeUp extends Command {
     public void execute() {
         m_up.setSpeed(UptakeConstants.uptakeSpeed);
     }
+
+    @Override 
+    public boolean isFinished() {   
+        return true;
+    }
 }

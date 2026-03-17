@@ -16,4 +16,9 @@ public class UptakeStop extends Command {
     public void execute() {
         m_up.setSpeed(0);
     }
+
+    @Override 
+    public boolean isFinished() {
+        return true;
+    }   
 }
