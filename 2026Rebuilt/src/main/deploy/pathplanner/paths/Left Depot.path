@@ -8,72 +8,58 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 4.607528409090909,
-        "y": 7.398494318181817
+        "x": 2.474237889938012,
+        "y": 7.356380882737696
       },
       "isLocked": false,
       "linkedName": "Left Start"
     },
     {
       "anchor": {
-        "x": 7.38967803030303,
-        "y": 7.38188446969697
+        "x": 1.6094507575757575,
+        "y": 5.95
       },
       "prevControl": {
-        "x": 6.675454545454546,
-        "y": 7.672556818181818
+        "x": 2.232968859775798,
+        "y": 6.234904540259176
       },
       "nextControl": {
-        "x": 8.239318556443237,
-        "y": 7.03610053463991
+        "x": 1.382063897751159,
+        "y": 5.846099971226624
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 7.829839015151514,
-        "y": 4.583125
+        "x": 0.8537026515151513,
+        "y": 5.95
       },
       "prevControl": {
-        "x": 7.597301136363637,
-        "y": 6.559696969696969
+        "x": 1.156807321309628,
+        "y": 5.950491748088344
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "Left Collect End"
+      "linkedName": null
     }
   ],
   "rotationTargets": [
     {
-      "waypointRelativePos": 0.6808510638298024,
-      "rotationDegrees": 0.0
+      "waypointRelativePos": 0.5263157894736922,
+      "rotationDegrees": -90.0
     },
     {
-      "waypointRelativePos": 1.3276595744681008,
-      "rotationDegrees": -90.0
+      "waypointRelativePos": 0.9498746867167993,
+      "rotationDegrees": 180.0
     }
   ],
-  "constraintZones": [
-    {
-      "name": "Constraints Zone",
-      "minWaypointRelativePos": 1.1331861662987508,
-      "maxWaypointRelativePos": 2.0,
-      "constraints": {
-        "maxVelocity": 2.0,
-        "maxAcceleration": 7.8,
-        "maxAngularVelocity": 540.0,
-        "maxAngularAcceleration": 1280.0,
-        "nominalVoltage": 12.0,
-        "unlimited": false
-      }
-    }
-  ],
+  "constraintZones": [],
   "pointTowardsZones": [],
   "eventMarkers": [
     {
       "name": "Intake Out",
-      "waypointRelativePos": 0.7534952170713598,
+      "waypointRelativePos": 0.47682119205297324,
       "endWaypointRelativePos": null,
       "command": {
         "type": "named",
@@ -92,8 +78,8 @@
     "unlimited": false
   },
   "goalEndState": {
-    "velocity": 0.0,
-    "rotation": -90.0
+    "velocity": 0,
+    "rotation": 180.0
   },
   "reversed": false,
   "folder": "Left Paths",

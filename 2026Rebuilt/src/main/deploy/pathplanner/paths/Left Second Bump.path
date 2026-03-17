@@ -1,0 +1,82 @@
+{
+  "version": "2025.0",
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 7.040871212121212,
+        "y": 4.823967803030302
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 5.789131459005592,
+        "y": 5.299268161579298
+      },
+      "isLocked": false,
+      "linkedName": "Left Collect End 2"
+    },
+    {
+      "anchor": {
+        "x": 4.914810606060606,
+        "y": 5.637850378787878
+      },
+      "prevControl": {
+        "x": 5.2066774767760915,
+        "y": 5.582033180656782
+      },
+      "nextControl": {
+        "x": 4.426606725797873,
+        "y": 5.731215455290714
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 2.373503787878788,
+        "y": 5.637850378787878
+      },
+      "prevControl": {
+        "x": 2.935778389903315,
+        "y": 5.624053581164314
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": "Left Shooting Pos"
+    }
+  ],
+  "rotationTargets": [],
+  "constraintZones": [],
+  "pointTowardsZones": [],
+  "eventMarkers": [
+    {
+      "name": "Intake Inter",
+      "waypointRelativePos": 0.5,
+      "endWaypointRelativePos": null,
+      "command": {
+        "type": "named",
+        "data": {
+          "name": "Intake Inter"
+        }
+      }
+    }
+  ],
+  "globalConstraints": {
+    "maxVelocity": 4.0,
+    "maxAcceleration": 7.8,
+    "maxAngularVelocity": 540.0,
+    "maxAngularAcceleration": 1280.0,
+    "nominalVoltage": 12.0,
+    "unlimited": false
+  },
+  "goalEndState": {
+    "velocity": 0,
+    "rotation": -45.0
+  },
+  "reversed": false,
+  "folder": "Left Paths",
+  "idealStartingState": {
+    "velocity": 0,
+    "rotation": -90.0
+  },
+  "useDefaultConstraints": true
+}
