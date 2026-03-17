@@ -37,7 +37,7 @@ public class RobotContainer {
   private final SendableChooser<Command> autoChooser;
 
   private double MaxSpeed = TunerConstants.kSpeedAtTestVolts.in(MetersPerSecond); // kSpeedAt12Volts desired top speed
-  private double MaxAngularRate = RotationsPerSecond.of(1).in(RadiansPerSecond); // 3/4 of a rotation per second max angular velocity
+  private double MaxAngularRate = RotationsPerSecond.of(3/4).in(RadiansPerSecond); // 3/4 of a rotation per second max angular velocity
 
   /* Setting up bindings for necessary control of the swerve drive platform */
   private final SwerveRequest.FieldCentric drive = new SwerveRequest.FieldCentric()
@@ -94,8 +94,8 @@ public class RobotContainer {
         m_Drive.setDefaultCommand(
             // Drivetrain will execute this command periodically
             m_Drive.applyRequest(() ->
-                drive.withVelocityX(-Math.signum(clip_and_rescale(m_DriverController.getLeftY(), 0.05)) * Math.pow(clip_and_rescale(m_DriverController.getLeftY(), 0.05), 2) * MaxSpeed) // Drive forward with negative Y (forward)
-                    .withVelocityY(- Math.signum(clip_and_rescale(m_DriverController.getLeftX(), 0.05)) * Math.pow(clip_and_rescale(m_DriverController.getLeftX(), 0.05), 2) * MaxSpeed) // Drive left with negative X (left)
+                drive.withVelocityX(-Math.signum(clip_and_rescale(m_DriverController.getLeftY(), 0.05)) * Math.pow(clip_and_rescale(m_DriverController.getLeftY(), 0.05), 3) * MaxSpeed) // Drive forward with negative Y (forward)
+                    .withVelocityY(- Math.signum(clip_and_rescale(m_DriverController.getLeftX(), 0.05)) * Math.pow(clip_and_rescale(m_DriverController.getLeftX(), 0.05), 3) * MaxSpeed) // Drive left with negative X (left)
                     .withRotationalRate(-clip_and_rescale(m_DriverController.getRightX(), 0.05) * MaxAngularRate) // Drive counterclockwise with negative X (left)
             )
         );
@@ -122,23 +122,24 @@ public class RobotContainer {
 
 
         //Intake Controls
-        m_DriverController.x().onChange(new IntakeOut(m_intake));
-        m_DriverController.b().onChange(new IntakeIn(m_intake));
+        m_DriverController.rightBumper().onTrue(new IntakeOut(m_intake));
+        m_DriverController.leftBumper().onTrue(new IntakeIn(m_intake));
         m_DriverController.back().onTrue(m_intake.runOnce(() -> m_intake.homeIntake()));
         m_DriverController.y().onTrue(new IntakeInter(m_intake));
+        m_DriverController.pov(180).onTrue(new InstantCommand(() -> m_intake.stopWheels()));
 
         //Shooter Controls
         m_DriverController.start().onTrue(new InstantCommand(() -> m_Turret.toggleShooter()));
 
         //While trigger is held fire balls
-        m_DriverController.leftTrigger(.5)
+        m_DriverController.rightTrigger(.5)
         .and(m_Turret.isShooterAtSpeed())
-        .toggleOnTrue(new SpindexerDrive(m_Spindexer)
-        .alongWith(new UptakeUp(m_Uptake))
+        .onTrue(new UptakeUp(m_Uptake)
+        .andThen(new SpindexerDrive(m_Spindexer))
         );
 
         //While trigger is not held stop spindex and uptake
-        m_DriverController.leftTrigger(.5)
+        m_DriverController.rightTrigger(.5)
         .toggleOnFalse(new SpindexerStop(m_Spindexer)
         .alongWith(new UptakeStop(m_Uptake)));
     }

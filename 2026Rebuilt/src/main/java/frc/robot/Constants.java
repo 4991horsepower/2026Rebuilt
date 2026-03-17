@@ -28,7 +28,7 @@ public final class Constants {
 
             //.5 meter from driver station wall and 3/4 of total field length from conner
             public static final Pose2d leftWall = new Pose2d(
-                .5,
+                1.5,
                 midFieldSplit + (midFieldSplit/2),
                 new Rotation2d(0));
 
@@ -55,7 +55,7 @@ public final class Constants {
 
             //.5 meter from driver station wall and 3/4 of total field length from conner
             public static final Pose2d rightWall = new Pose2d(
-                16.040988,
+                15,
                 midFieldSplit + (midFieldSplit/2),
                 new Rotation2d(0));
 
