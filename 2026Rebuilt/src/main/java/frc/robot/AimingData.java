@@ -15,6 +15,7 @@ public class AimingData {
         shootingSpeedMap.put(3.63,33.5);
         shootingSpeedMap.put(2.52,31.5);
         shootingSpeedMap.put(1.56,27.5);
+        shootingSpeedMap.put(5.895, 40.75);
 
         timeOfflightMap.put(4.58, 1.22);
         timeOfflightMap.put(3.63, 1.14);

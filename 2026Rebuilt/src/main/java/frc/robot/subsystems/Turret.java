@@ -197,15 +197,14 @@ public class Turret extends SubsystemBase {
 
         double shot_time = aimingData.getShotTime(distance);
 
-        Pose2d lookahead = m_VelocitySupplier.get().times(shot_time);
-        Transform2d lookahead_translation = new Transform2d(0, 0, /*-lookahead.getX(), -lookahead.getY(),*/ new Rotation2d());
+        Pose2d lookahead = m_VelocitySupplier.get().times(shot_time * 0.5);
+        Transform2d lookahead_translation = new Transform2d(-lookahead.getX(), -lookahead.getY(), new Rotation2d());
 
-        //System.out.println("X: " + m_VelocitySupplier.get().getX());
-        //System.out.println("Y: " + m_VelocitySupplier.get().getY());
-
+        SmartDashboard.putNumber("Vel X", m_VelocitySupplier.get().getX());
+        SmartDashboard.putNumber("Vel Y", m_VelocitySupplier.get().getY());
 
         //Get robot Position Relative to target
-        m_TurretPosition = (robot_pose.plus(robotToTurretPivot).plus(lookahead_translation)).minus(target).inverse();
+        m_TurretPosition = robot_pose.plus(robotToTurretPivot).minus(target.plus(lookahead_translation)).inverse();
 
         //Get angle to target
         m_RobotThetaToTarget = new Rotation2d(Math.atan2(m_TurretPosition.getY() , m_TurretPosition.getX()));
@@ -238,8 +237,8 @@ public class Turret extends SubsystemBase {
     public void setTurretAngle(double angle){
         //receives angle in rotations
         //Keeps Turret Bound to .75 rotations 
-        if(angle > Units.degreesToRotations(135)) {setTurretAngle = .375; aimedAtTarget = false;}
-        else if(angle < Units.degreesToRotations(-135)) {setTurretAngle = -.375; aimedAtTarget = false;}
+        if(angle > Units.degreesToRotations(155)) {setTurretAngle = .431; aimedAtTarget = false;}
+        else if(angle < Units.degreesToRotations(-155)) {setTurretAngle = -.431; aimedAtTarget = false;}
         else {setTurretAngle = angle; aimedAtTarget = true;}
         SmartDashboard.putNumber("Theta to Target (clipped)", Units.rotationsToDegrees(setTurretAngle));
         //Sets Turret position to the converted angle
