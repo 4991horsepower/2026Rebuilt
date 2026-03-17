@@ -31,11 +31,6 @@ import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 
 import frc.robot.generated.TunerConstants.TunerSwerveDrivetrain;
 
-/* ADDED IMPORTS */
-import java.util.function.DoubleSupplier;
-import edu.wpi.first.math.MathUtil;
-import edu.wpi.first.math.filter.SlewRateLimiter;
-
 /**
  * Class that extends the Phoenix 6 SwerveDrivetrain class and implements
  * Subsystem so it can easily be used in command-based projects.
@@ -56,9 +51,9 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
 
     /* ADDED MEMBERS FOR SMOOTHING */
     private final SwerveRequest.FieldCentric m_manualRequest = new SwerveRequest.FieldCentric().withDeadband(0.0);
-    private final SlewRateLimiter xLimiter = new SlewRateLimiter(18.0);
-    private final SlewRateLimiter yLimiter = new SlewRateLimiter(18.0);
-    private final SlewRateLimiter rotLimiter = new SlewRateLimiter(24.0);
+    private final SlewRateLimiter xLimiter = new SlewRateLimiter(12, -100, 0.0);
+    private final SlewRateLimiter yLimiter = new SlewRateLimiter(12, -100, 0.0);
+    private final SlewRateLimiter rotLimiter = new SlewRateLimiter(16.0, -200.0, 0.0);
 
     /* Swerve requests to apply during SysId characterization */
     private final SwerveRequest.SysIdSwerveTranslation m_translationCharacterization = new SwerveRequest.SysIdSwerveTranslation();
@@ -167,8 +162,8 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
      *
      * @param drivetrainConstants     Drivetrain-wide constants for the swerve drive
      * @param odometryUpdateFrequency The frequency to run the odometry loop. If
-     * unspecified or set to 0 Hz, this is 250 Hz on
-     * CAN FD, and 100 Hz on CAN 2.0.
+     *                                unspecified or set to 0 Hz, this is 250 Hz on
+     *                                CAN FD, and 100 Hz on CAN 2.0.
      * @param modules                 Constants for each specific module
      */
     public CommandSwerveDrivetrain(
@@ -192,14 +187,14 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
      *
      * @param drivetrainConstants       Drivetrain-wide constants for the swerve drive
      * @param odometryUpdateFrequency   The frequency to run the odometry loop. If
-     * unspecified or set to 0 Hz, this is 250 Hz on
-     * CAN FD, and 100 Hz on CAN 2.0.
+     *                                  unspecified or set to 0 Hz, this is 250 Hz on
+     *                                  CAN FD, and 100 Hz on CAN 2.0.
      * @param odometryStandardDeviation The standard deviation for odometry calculation
-     * in the form [x, y, theta]ᵀ, with units in meters
-     * and radians
+     *                                  in the form [x, y, theta]ᵀ, with units in meters
+     *                                  and radians
      * @param visionStandardDeviation   The standard deviation for vision calculation
-     * in the form [x, y, theta]ᵀ, with units in meters
-     * and radians
+     *                                  in the form [x, y, theta]ᵀ, with units in meters
+     *                                  and radians
      * @param modules                   Constants for each specific module
      */
     public CommandSwerveDrivetrain(
@@ -241,6 +236,8 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
             double targetX = xLimiter.calculate(xScored * maxSpeed);
             double targetY = yLimiter.calculate(yScored * maxSpeed);
             double targetRot = rotLimiter.calculate(rotScored * maxRot);
+
+            System.out.println("Target Rotation: " + targetRot);
 
             this.setControl(m_manualRequest.withVelocityX(targetX).withVelocityY(targetY).withRotationalRate(targetRot));
         });
@@ -344,7 +341,7 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
      * @param visionRobotPoseMeters The pose of the robot as measured by the vision camera.
      * @param timestampSeconds The timestamp of the vision measurement in seconds.
      * @param visionMeasurementStdDevs Standard deviations of the vision pose measurement
-     * in the form [x, y, theta]ᵀ, with units in meters and radians.
+     *     in the form [x, y, theta]ᵀ, with units in meters and radians.
      */
     @Override
     public void addVisionMeasurement(
