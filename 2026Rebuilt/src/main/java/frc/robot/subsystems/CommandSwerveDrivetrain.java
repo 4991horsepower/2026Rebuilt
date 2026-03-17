@@ -56,9 +56,9 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
 
     /* ADDED MEMBERS FOR SMOOTHING */
     private final SwerveRequest.FieldCentric m_manualRequest = new SwerveRequest.FieldCentric().withDeadband(0.0);
-    private final SlewRateLimiter xLimiter = new SlewRateLimiter(18.0);
-    private final SlewRateLimiter yLimiter = new SlewRateLimiter(18.0);
-    private final SlewRateLimiter rotLimiter = new SlewRateLimiter(24.0);
+    private final SlewRateLimiter xLimiter = new SlewRateLimiter(12, -100, 0.0);
+    private final SlewRateLimiter yLimiter = new SlewRateLimiter(12, -100, 0.0);
+    private final SlewRateLimiter rotLimiter = new SlewRateLimiter(16.0, -200.0, 0.0);
 
     /* Swerve requests to apply during SysId characterization */
     private final SwerveRequest.SysIdSwerveTranslation m_translationCharacterization = new SwerveRequest.SysIdSwerveTranslation();
@@ -241,6 +241,8 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
             double targetX = xLimiter.calculate(xScored * maxSpeed);
             double targetY = yLimiter.calculate(yScored * maxSpeed);
             double targetRot = rotLimiter.calculate(rotScored * maxRot);
+
+            System.out.println("Target Rotation: " + targetRot);
 
             this.setControl(m_manualRequest.withVelocityX(targetX).withVelocityY(targetY).withRotationalRate(targetRot));
         });
