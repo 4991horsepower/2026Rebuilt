@@ -74,74 +74,61 @@ public class RobotContainer {
     CommandScheduler.getInstance().schedule(FollowPathCommand.warmupCommand());
   }
 
-  private double clip_and_rescale(double i, double dz)
-  {
-    if(Math.abs(i) < dz)
-    {
-      return 0;
-    }
-    else
-    {
-      return (i - dz) / (1 - dz);
-    }
-  }
-
   private void configureBindings() {
 
     //Drive Controls
-        // Note that X is defined as forward according to WPILib convention,
-        // and Y is defined as to the left according to WPILib convention.
-        m_Drive.setDefaultCommand(
-            // Drivetrain will execute this command periodically
-            m_Drive.applyRequest(() ->
-                drive.withVelocityX(-Math.signum(clip_and_rescale(m_DriverController.getLeftY(), 0.05)) * Math.pow(clip_and_rescale(m_DriverController.getLeftY(), 0.05), 2) * MaxSpeed) // Drive forward with negative Y (forward)
-                    .withVelocityY(- Math.signum(clip_and_rescale(m_DriverController.getLeftX(), 0.05)) * Math.pow(clip_and_rescale(m_DriverController.getLeftX(), 0.05), 2) * MaxSpeed) // Drive left with negative X (left)
-                    .withRotationalRate(-clip_and_rescale(m_DriverController.getRightX(), 0.05) * MaxAngularRate) // Drive counterclockwise with negative X (left)
-            )
-        );
+    m_Drive.setDefaultCommand(
+        m_Drive.manualDriveCommand(
+            () -> -m_DriverController.getLeftY(), // Forward is negative Y
+            () -> -m_DriverController.getLeftX(), // Left is negative X
+            () -> -m_DriverController.getRightX(), // CCW is negative X
+            MaxSpeed,
+            MaxAngularRate
+        )
+    );
 
-        // Idle while the robot is disabled. This ensures the configured
-        // neutral mode is applied to the drive motors while disabled.
-        final var idle = new SwerveRequest.Idle();
-        RobotModeTriggers.disabled().whileTrue(
-            m_Drive.applyRequest(() -> idle).ignoringDisable(true)
-        );
+    // Idle while the robot is disabled. This ensures the configured
+    // neutral mode is applied to the drive motors while disabled.
+    final var idle = new SwerveRequest.Idle();
+    RobotModeTriggers.disabled().whileTrue(
+        m_Drive.applyRequest(() -> idle).ignoringDisable(true)
+    );
 
-        // Run SysId routines when holding back/start and X/Y.
-        // Note that each routine should be run exactly once in a single log.
-        m_DriverController.back().and(m_DriverController.y()).whileTrue(m_Drive.sysIdDynamic(Direction.kForward));
-        m_DriverController.back().and(m_DriverController.x()).whileTrue(m_Drive.sysIdDynamic(Direction.kReverse));
-        m_DriverController.start().and(m_DriverController.y()).whileTrue(m_Drive.sysIdQuasistatic(Direction.kForward));
-        m_DriverController.start().and(m_DriverController.x()).whileTrue(m_Drive.sysIdQuasistatic(Direction.kReverse));
+    // Run SysId routines when holding back/start and X/Y.
+    // Note that each routine should be run exactly once in a single log.
+    m_DriverController.back().and(m_DriverController.y()).whileTrue(m_Drive.sysIdDynamic(Direction.kForward));
+    m_DriverController.back().and(m_DriverController.x()).whileTrue(m_Drive.sysIdDynamic(Direction.kReverse));
+    m_DriverController.start().and(m_DriverController.y()).whileTrue(m_Drive.sysIdQuasistatic(Direction.kForward));
+    m_DriverController.start().and(m_DriverController.x()).whileTrue(m_Drive.sysIdQuasistatic(Direction.kReverse));
 
-        // reset the field-centric heading on a button press
-        m_DriverController.a().onTrue(m_Drive.runOnce(() -> m_Drive.seedFieldCentric()));
+    // reset the field-centric heading on a button press
+    m_DriverController.a().onTrue(m_Drive.runOnce(() -> m_Drive.seedFieldCentric()));
 
-        //Cancel All Commands
-        m_DriverController.x().onTrue(new InstantCommand(()->cancelAllCommands()));
+    //Cancel All Commands
+    m_DriverController.x().onTrue(new InstantCommand(()->cancelAllCommands()));
 
 
-        //Intake Controls
-        m_DriverController.x().onChange(new IntakeOut(m_intake));
-        m_DriverController.b().onChange(new IntakeIn(m_intake));
-        m_DriverController.back().onTrue(m_intake.runOnce(() -> m_intake.homeIntake()));
-        m_DriverController.y().onTrue(new IntakeInter(m_intake));
+    //Intake Controls
+    m_DriverController.x().onChange(new IntakeOut(m_intake));
+    m_DriverController.b().onChange(new IntakeIn(m_intake));
+    m_DriverController.back().onTrue(m_intake.runOnce(() -> m_intake.homeIntake()));
+    m_DriverController.y().onTrue(new IntakeInter(m_intake));
 
-        //Shooter Controls
-        m_DriverController.start().onTrue(new InstantCommand(() -> m_Turret.toggleShooter()));
+    //Shooter Controls
+    m_DriverController.start().onTrue(new InstantCommand(() -> m_Turret.toggleShooter()));
 
-        //While trigger is held fire balls
-        m_DriverController.leftTrigger(.5)
-        .and(m_Turret.isShooterAtSpeed())
-        .toggleOnTrue(new SpindexerDrive(m_Spindexer)
-        .alongWith(new UptakeUp(m_Uptake))
-        );
+    //While trigger is held fire balls
+    m_DriverController.leftTrigger(.5)
+    .and(m_Turret.isShooterAtSpeed())
+    .toggleOnTrue(new SpindexerDrive(m_Spindexer)
+    .alongWith(new UptakeUp(m_Uptake))
+    );
 
-        //While trigger is not held stop spindex and uptake
-        m_DriverController.leftTrigger(.5)
-        .toggleOnFalse(new SpindexerStop(m_Spindexer)
-        .alongWith(new UptakeStop(m_Uptake)));
-    }
+    //While trigger is not held stop spindex and uptake
+    m_DriverController.leftTrigger(.5)
+    .toggleOnFalse(new SpindexerStop(m_Spindexer)
+    .alongWith(new UptakeStop(m_Uptake)));
+  }
 
   public Command getAutonomousCommand() {
     return autoChooser.getSelected();
