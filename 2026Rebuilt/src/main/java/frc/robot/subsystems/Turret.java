@@ -216,7 +216,7 @@ public class Turret extends SubsystemBase {
         if(shooterOn && aimedAtTarget){
             setShooterSpeed(aimingData.getShotSpeed(distance));
         }
-        else{
+        else if(!shooterOn){
             setShooterSpeed(0);
         }
 
