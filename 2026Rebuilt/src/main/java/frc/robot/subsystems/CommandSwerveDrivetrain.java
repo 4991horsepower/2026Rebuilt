@@ -47,7 +47,13 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
     /* Keep track if we've ever applied the operator perspective before or not */
     private boolean m_hasAppliedOperatorPerspective = false;
 
-    private final SwerveRequest.ApplyRobotSpeeds m_pathApplyRobotSpeeds = new SwerveRequest.ApplyRobotSpeeds();
+    private final SwerveRequest.ApplyRobotSpeeds m_pathApplyRobotSpeeds = new SwerveRequest.ApplyRobotSpeeds().withDesaturateWheelSpeeds(true);
+
+    /* ADDED MEMBERS FOR SMOOTHING */
+    private final SwerveRequest.FieldCentric m_manualRequest = new SwerveRequest.FieldCentric().withDeadband(0.0);
+    private final SlewRateLimiter xLimiter = new SlewRateLimiter(12, -100, 0.0);
+    private final SlewRateLimiter yLimiter = new SlewRateLimiter(12, -100, 0.0);
+    private final SlewRateLimiter rotLimiter = new SlewRateLimiter(16.0, -200.0, 0.0);
 
     /* Swerve requests to apply during SysId characterization */
     private final SwerveRequest.SysIdSwerveTranslation m_translationCharacterization = new SwerveRequest.SysIdSwerveTranslation();
@@ -212,6 +218,29 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
      */
     public Command applyRequest(Supplier<SwerveRequest> requestSupplier) {
         return run(() -> this.setControl(requestSupplier.get()));
+    }
+
+    /**
+     * ADDED: Manual Drive Command with Blended Cubic Scaling and Slew Rate Limiting
+     */
+    public Command manualDriveCommand(DoubleSupplier xSup, DoubleSupplier ySup, DoubleSupplier rotSup, double maxSpeed, double maxRot) {
+        return run(() -> {
+            double xRaw = MathUtil.applyDeadband(xSup.getAsDouble(), 0.1);
+            double yRaw = MathUtil.applyDeadband(ySup.getAsDouble(), 0.1);
+            double rotRaw = MathUtil.applyDeadband(rotSup.getAsDouble(), 0.1);
+
+            double xScored = (0.75 * Math.pow(xRaw, 3)) + (0.25 * xRaw);
+            double yScored = (0.75 * Math.pow(yRaw, 3)) + (0.25 * yRaw);
+            double rotScored = (0.75 * Math.pow(rotRaw, 3)) + (0.25 * rotRaw);
+
+            double targetX = xLimiter.calculate(xScored * maxSpeed);
+            double targetY = yLimiter.calculate(yScored * maxSpeed);
+            double targetRot = rotLimiter.calculate(rotScored * maxRot);
+
+            System.out.println("Target Rotation: " + targetRot);
+
+            this.setControl(m_manualRequest.withVelocityX(targetX).withVelocityY(targetY).withRotationalRate(targetRot));
+        });
     }
 
     /**
