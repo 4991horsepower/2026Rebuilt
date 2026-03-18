@@ -149,7 +149,12 @@ public class Turret extends SubsystemBase {
             SmartDashboard.putNumber("Actual Shooter Speed", m_Wheel.getVelocity().getValueAsDouble());
         }
 
-        m_Turret.setPosition((m_Turret.getPosition().getValueAsDouble() % 1) * (Math.abs(m_Turret.getPosition().getValueAsDouble()/m_Turret.getPosition().getValueAsDouble())));
+        if(m_Turret.getPosition().getValueAsDouble() < -.5){
+            m_Turret.setPosition(m_Turret.getPosition().getValueAsDouble() + 1);
+        }
+        else if (m_Turret.getPosition().getValueAsDouble() > .5){
+             m_Turret.setPosition(m_Turret.getPosition().getValueAsDouble() - 1);
+        }
 
     setHoodAngle(setHoodAngle);
     }
