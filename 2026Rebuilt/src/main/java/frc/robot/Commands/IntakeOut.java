@@ -14,7 +14,7 @@ public class IntakeOut extends Command {
 
 @Override
 public void execute(){
-    m_intake.setIntakePosition(IntakeConstants.intakeOutPos);
+    //m_intake.setIntakePosition(IntakeConstants.intakeOutPos);
     m_intake.setIntakeSpeed(IntakeConstants.intakeRunSpeed);
 }
 
