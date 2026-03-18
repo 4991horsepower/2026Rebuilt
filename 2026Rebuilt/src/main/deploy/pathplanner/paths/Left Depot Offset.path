@@ -1,0 +1,71 @@
+{
+  "version": "2025.0",
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 3.5777178030303025,
+        "y": 6.0530965909090915
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 2.149270833333334,
+        "y": 5.9534375
+      },
+      "isLocked": false,
+      "linkedName": "Left Offset"
+    },
+    {
+      "anchor": {
+        "x": 0.7457386363636362,
+        "y": 5.95
+      },
+      "prevControl": {
+        "x": 1.022805098268759,
+        "y": 5.96194803436334
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": null
+    }
+  ],
+  "rotationTargets": [
+    {
+      "waypointRelativePos": 0.25,
+      "rotationDegrees": 180.0
+    }
+  ],
+  "constraintZones": [],
+  "pointTowardsZones": [],
+  "eventMarkers": [
+    {
+      "name": "Intake Out",
+      "waypointRelativePos": 0.25,
+      "endWaypointRelativePos": null,
+      "command": {
+        "type": "named",
+        "data": {
+          "name": "Intake Out"
+        }
+      }
+    }
+  ],
+  "globalConstraints": {
+    "maxVelocity": 4.0,
+    "maxAcceleration": 7.8,
+    "maxAngularVelocity": 540.0,
+    "maxAngularAcceleration": 1280.0,
+    "nominalVoltage": 12.0,
+    "unlimited": false
+  },
+  "goalEndState": {
+    "velocity": 0,
+    "rotation": 180.0
+  },
+  "reversed": false,
+  "folder": "Left Paths",
+  "idealStartingState": {
+    "velocity": 0,
+    "rotation": 0.0
+  },
+  "useDefaultConstraints": true
+}

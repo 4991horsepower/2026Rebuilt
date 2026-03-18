@@ -1,0 +1,121 @@
+{
+  "version": "2025.0",
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 3.5777178030303025,
+        "y": 6.0530965909090915
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 3.2123011363636365,
+        "y": 7.10782196969697
+      },
+      "isLocked": false,
+      "linkedName": "Left Offset"
+    },
+    {
+      "anchor": {
+        "x": 3.5777178030303025,
+        "y": 7.398494318181817
+      },
+      "prevControl": {
+        "x": 3.055545691287879,
+        "y": 6.999338896780302
+      },
+      "nextControl": {
+        "x": 4.099889914772726,
+        "y": 7.797649739583332
+      },
+      "isLocked": false,
+      "linkedName": "Left Start"
+    },
+    {
+      "anchor": {
+        "x": 7.38967803030303,
+        "y": 7.38188446969697
+      },
+      "prevControl": {
+        "x": 6.675454545454546,
+        "y": 7.672556818181818
+      },
+      "nextControl": {
+        "x": 8.239318556443237,
+        "y": 7.03610053463991
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 7.829839015151514,
+        "y": 4.583125
+      },
+      "prevControl": {
+        "x": 7.597301136363637,
+        "y": 6.559696969696969
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": "Left Collect End"
+    }
+  ],
+  "rotationTargets": [
+    {
+      "waypointRelativePos": 1.35,
+      "rotationDegrees": 0.0
+    },
+    {
+      "waypointRelativePos": 2.327659574468101,
+      "rotationDegrees": -90.0
+    }
+  ],
+  "constraintZones": [
+    {
+      "name": "Constraints Zone",
+      "minWaypointRelativePos": 2.133186166298751,
+      "maxWaypointRelativePos": 3.0,
+      "constraints": {
+        "maxVelocity": 2.0,
+        "maxAcceleration": 7.8,
+        "maxAngularVelocity": 540.0,
+        "maxAngularAcceleration": 1280.0,
+        "nominalVoltage": 12.0,
+        "unlimited": false
+      }
+    }
+  ],
+  "pointTowardsZones": [],
+  "eventMarkers": [
+    {
+      "name": "Intake Out",
+      "waypointRelativePos": 1.5,
+      "endWaypointRelativePos": null,
+      "command": {
+        "type": "named",
+        "data": {
+          "name": "Intake Out"
+        }
+      }
+    }
+  ],
+  "globalConstraints": {
+    "maxVelocity": 4.0,
+    "maxAcceleration": 7.8,
+    "maxAngularVelocity": 540.0,
+    "maxAngularAcceleration": 1280.0,
+    "nominalVoltage": 12.0,
+    "unlimited": false
+  },
+  "goalEndState": {
+    "velocity": 0.0,
+    "rotation": -90.0
+  },
+  "reversed": false,
+  "folder": "Left Paths",
+  "idealStartingState": {
+    "velocity": 0,
+    "rotation": 0.0
+  },
+  "useDefaultConstraints": true
+}
