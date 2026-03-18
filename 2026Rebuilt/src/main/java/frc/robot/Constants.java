@@ -34,7 +34,7 @@ public final class Constants {
 
             //.5 meter from driver station wall and 3/4 of total field length from conner
             public static final Pose2d rightWall = new Pose2d(
-                0.5,
+                1.5,
                 midFieldSplit/2,
                 new Rotation2d(0));
             
@@ -61,7 +61,7 @@ public final class Constants {
 
             //.5 meter from driver station wall and 3/4 of total field length from conner
             public static final Pose2d leftWall = new Pose2d(
-                16.040988,
+                15,
                 midFieldSplit/2,
                 new Rotation2d(0));
             
@@ -136,7 +136,7 @@ public final class Constants {
         public static final double inkD = 0;
         public static final double inkV = 1;
 
-        public static final double intakeRunSpeed = 42; //Rotations per second
+        public static final double intakeRunSpeed = 28; //Rotations per second
 
         public static final double intakeOutPos = 56.66; //Rotations
         public static final double intakeInPos = 0; //Rotations
