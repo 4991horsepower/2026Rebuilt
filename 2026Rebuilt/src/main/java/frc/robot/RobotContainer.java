@@ -37,7 +37,7 @@ public class RobotContainer {
   private final SendableChooser<Command> autoChooser;
 
   private double MaxSpeed = TunerConstants.kSpeedAtTestVolts.in(MetersPerSecond); // kSpeedAt12Volts desired top speed
-  private double MaxAngularRate = RotationsPerSecond.of(3/4).in(RadiansPerSecond); // 3/4 of a rotation per second max angular velocity
+  private double MaxAngularRate = RotationsPerSecond.of(1.0).in(RadiansPerSecond); // 3/4 of a rotation per second max angular velocity
 
   /* Setting up bindings for necessary control of the swerve drive platform */
   private final SwerveRequest.FieldCentric drive = new SwerveRequest.FieldCentric()
