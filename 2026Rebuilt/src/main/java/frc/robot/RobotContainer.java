@@ -112,7 +112,7 @@ public class RobotContainer {
     m_DriverController.leftBumper().onTrue(new IntakeIn(m_intake));
     m_DriverController.back().onTrue(m_intake.runOnce(() -> m_intake.homeIntake()));
     m_DriverController.y().onTrue(new IntakeInter(m_intake));
-    m_DriverController.pov(180).onTrue(new InstantCommand(() -> m_intake.stopWheels()));
+    m_DriverController.b().onTrue(new InstantCommand(() -> m_intake.stopWheels()));
 
     //Shooter Controls
     m_DriverController.start().onTrue(new InstantCommand(() -> m_Turret.toggleShooter()));
