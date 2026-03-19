@@ -7,6 +7,7 @@ import java.util.function.Supplier;
 
 import com.ctre.phoenix6.BaseStatusSignal;
 import com.ctre.phoenix6.StatusSignal;
+import com.ctre.phoenix6.configs.CommutationConfigs;
 import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
 import com.ctre.phoenix6.configs.ExternalFeedbackConfigs;
 import com.ctre.phoenix6.configs.Slot0Configs;
@@ -19,8 +20,10 @@ import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.controls.VelocityTorqueCurrentFOC;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.hardware.TalonFXS;
+import com.ctre.phoenix6.signals.BrushedMotorWiringValue;
 import com.ctre.phoenix6.signals.ExternalFeedbackSensorSourceValue;
 import com.ctre.phoenix6.signals.FeedbackSensorSourceValue;
+import com.ctre.phoenix6.signals.MotorArrangementValue;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -97,7 +100,8 @@ public class Turret extends SubsystemBase {
         m_TurretConfigurator = m_Turret.getConfigurator();
 
         ExternalFeedbackConfigs m_EncoderConfig = new ExternalFeedbackConfigs()
-        .withExternalFeedbackSensorSource(ExternalFeedbackSensorSourceValue.PulseWidth);
+        .withExternalFeedbackSensorSource(ExternalFeedbackSensorSourceValue.PulseWidth)
+        .withAbsoluteSensorOffset(0.027588);
 
         m_TurretConfig = new Slot0Configs()
         .withKP(TurretConstants.turretkP)
@@ -110,7 +114,11 @@ public class Turret extends SubsystemBase {
         .withStatorCurrentLimitEnable(true)
         .withSupplyCurrentLimit(30)
         .withSupplyCurrentLimitEnable(true))
-        .withSlot0(m_TurretConfig);
+        .withSlot0(m_TurretConfig)
+        .withCommutation(new CommutationConfigs().
+        withBrushedMotorWiring(BrushedMotorWiringValue.Leads_A_and_C)
+        .withMotorArrangement(MotorArrangementValue.Brushed_DC))
+        .withExternalFeedback(m_EncoderConfig);
 
         m_TurretConfigurator.apply(m_TurretCurrentConfig);
         m_TurretConfigurator.apply(m_EncoderConfig);
