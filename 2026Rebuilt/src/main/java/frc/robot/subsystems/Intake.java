@@ -5,7 +5,9 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.IntakeConstants;
 
-import com.ctre.phoenix6.configs.SlotConfigs;
+import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
+import com.ctre.phoenix6.configs.Slot0Configs;
+import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.configs.TalonFXConfigurator;
 import com.ctre.phoenix6.controls.VelocityTorqueCurrentFOC;
 import com.ctre.phoenix6.hardware.TalonFX;
@@ -26,7 +28,9 @@ public class Intake extends SubsystemBase {
 
     private final TalonFXConfigurator m_InConfigurator;
 
-    private final SlotConfigs m_InConfigs;
+    private final TalonFXConfiguration m_CurrentConfig;
+
+    private final Slot0Configs m_InConfigs;
 
     private final SparkFlex m_Linear;
 
@@ -48,11 +52,22 @@ public class Intake extends SubsystemBase {
 
         m_InConfigurator = m_InMotor.getConfigurator();
 
-        m_InConfigs = new SlotConfigs()
+                m_InConfigs = new Slot0Configs()
             .withKP(IntakeConstants.inkP)
             .withKI(IntakeConstants.inkI)
             .withKD(IntakeConstants.inkD)
-            .withKV(IntakeConstants.inkV);
+            .withKV(IntakeConstants.inkV)
+            ;
+
+        m_CurrentConfig = new TalonFXConfiguration()
+        .withCurrentLimits(new CurrentLimitsConfigs()
+        .withStatorCurrentLimit(60)
+        .withStatorCurrentLimitEnable(true)
+        .withSupplyCurrentLimit(30)
+        .withSupplyCurrentLimitEnable(true)
+        )
+        .withSlot0(m_InConfigs);
+        
 
         m_Limit = new DigitalInput(0);
 
@@ -73,7 +88,7 @@ public class Intake extends SubsystemBase {
             IntakeConstants.linkD
         );
 
-        m_InConfigurator.apply(m_InConfigs);
+        m_InConfigurator.apply(m_CurrentConfig);
         m_Linear.configure(m_LinearConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
     }
 
