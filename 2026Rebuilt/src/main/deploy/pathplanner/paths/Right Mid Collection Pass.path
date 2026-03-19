@@ -67,11 +67,11 @@
     },
     {
       "waypointRelativePos": 2.0,
-      "rotationDegrees": 90.0
+      "rotationDegrees": 110.0
     },
     {
       "waypointRelativePos": 2.65,
-      "rotationDegrees": 90.0
+      "rotationDegrees": 110.0
     },
     {
       "waypointRelativePos": 3.0,
@@ -117,7 +117,7 @@
   },
   "goalEndState": {
     "velocity": 0.0,
-    "rotation": 90.0
+    "rotation": 100.0
   },
   "reversed": false,
   "folder": "Right Paths",
