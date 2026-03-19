@@ -7,9 +7,11 @@ import java.util.function.Supplier;
 
 import com.ctre.phoenix6.BaseStatusSignal;
 import com.ctre.phoenix6.StatusSignal;
+import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
 import com.ctre.phoenix6.configs.ExternalFeedbackConfigs;
 import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.configs.SlotConfigs;
+import com.ctre.phoenix6.configs.TalonFXSConfiguration;
 import com.ctre.phoenix6.configs.TalonFXConfigurator;
 import com.ctre.phoenix6.configs.TalonFXSConfigurator;
 import com.ctre.phoenix6.controls.PositionTorqueCurrentFOC;
@@ -45,6 +47,8 @@ public class Turret extends SubsystemBase {
     private final TalonFXSConfigurator m_TurretConfigurator;
 
     private final Slot0Configs m_TurretConfig;
+
+    private final TalonFXSConfiguration m_TurretCurrentConfig;
 
     private double setTurretAngle = 0;
 
@@ -100,9 +104,15 @@ public class Turret extends SubsystemBase {
         .withKI(TurretConstants.turretkI)
         .withKD(TurretConstants.turretkD);
 
-        
+        m_TurretCurrentConfig = new TalonFXSConfiguration()
+        .withCurrentLimits(new CurrentLimitsConfigs()
+        .withStatorCurrentLimit(60)
+        .withStatorCurrentLimitEnable(true)
+        .withSupplyCurrentLimit(30)
+        .withSupplyCurrentLimitEnable(true))
+        .withSlot0(m_TurretConfig);
 
-        m_TurretConfigurator.apply(m_TurretConfig);
+        m_TurretConfigurator.apply(m_TurretCurrentConfig);
         m_TurretConfigurator.apply(m_EncoderConfig);
 
         m_Turret.setControl(new PositionVoltage(0));
