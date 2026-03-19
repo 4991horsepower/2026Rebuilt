@@ -331,4 +331,13 @@ public class Turret extends SubsystemBase {
     public void toggleShooter(){
         shooterOn = !shooterOn;
     }
+
+    public void resetTurret(){
+        if(m_Turret.getPosition().getValueAsDouble() < -.5){
+            m_Turret.setPosition(m_Turret.getPosition().getValueAsDouble() + 1);
+        }
+        else if (m_Turret.getPosition().getValueAsDouble() > .5){
+             m_Turret.setPosition(m_Turret.getPosition().getValueAsDouble() - 1);
+        }
+    }
 }

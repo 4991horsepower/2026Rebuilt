@@ -137,4 +137,8 @@ public class RobotContainer {
     public void cancelAllCommands() {
     CommandScheduler.getInstance().cancelAll();
   }
+
+  public Turret getTurret(){
+    return m_Turret;
+  }
 }
