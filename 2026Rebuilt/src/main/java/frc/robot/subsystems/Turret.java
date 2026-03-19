@@ -10,6 +10,7 @@ import com.ctre.phoenix6.StatusSignal;
 import com.ctre.phoenix6.configs.CommutationConfigs;
 import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
 import com.ctre.phoenix6.configs.ExternalFeedbackConfigs;
+import com.ctre.phoenix6.configs.MotorOutputConfigs;
 import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.configs.SlotConfigs;
 import com.ctre.phoenix6.configs.TalonFXSConfiguration;
@@ -23,6 +24,7 @@ import com.ctre.phoenix6.hardware.TalonFXS;
 import com.ctre.phoenix6.signals.BrushedMotorWiringValue;
 import com.ctre.phoenix6.signals.ExternalFeedbackSensorSourceValue;
 import com.ctre.phoenix6.signals.FeedbackSensorSourceValue;
+import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.MotorArrangementValue;
 
 import edu.wpi.first.math.geometry.Pose2d;
@@ -118,7 +120,9 @@ public class Turret extends SubsystemBase {
         .withCommutation(new CommutationConfigs().
         withBrushedMotorWiring(BrushedMotorWiringValue.Leads_A_and_C)
         .withMotorArrangement(MotorArrangementValue.Brushed_DC))
-        .withExternalFeedback(m_EncoderConfig);
+        .withExternalFeedback(m_EncoderConfig)
+        .withMotorOutput(new MotorOutputConfigs()
+        .withInverted(InvertedValue.Clockwise_Positive));
 
         m_TurretConfigurator.apply(m_TurretCurrentConfig);
         m_TurretConfigurator.apply(m_EncoderConfig);
