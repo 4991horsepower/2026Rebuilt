@@ -131,12 +131,12 @@ public final class Constants {
         public static final double linkI = 0.00;
         public static final double linkD = 1;
 
-        public static final double inkP = 6;
+        public static final double inkP = 4;
         public static final double inkI = 0;
         public static final double inkD = 0;
         public static final double inkV = 1;
 
-        public static final double intakeRunSpeed = 28; //Rotations per second
+        public static final double intakeRunSpeed = 40; //Rotations per second
 
         public static final double intakeOutPos = 56.66; //Rotations
         public static final double intakeInPos = 0; //Rotations

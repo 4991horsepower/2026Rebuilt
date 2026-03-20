@@ -4,33 +4,43 @@
 
 package frc.robot;
 
-import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import edu.wpi.first.wpilibj2.command.Commands;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
-import frc.robot.Commands.*;
-import frc.robot.generated.TunerConstants;
-
 import static edu.wpi.first.units.Units.MetersPerSecond;
 import static edu.wpi.first.units.Units.RadiansPerSecond;
 import static edu.wpi.first.units.Units.RotationsPerSecond;
 
-import java.util.function.BooleanSupplier;
-
-import com.ctre.phoenix6.swerve.SwerveRequest;
 import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
+import com.ctre.phoenix6.swerve.SwerveRequest;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.commands.FollowPathCommand;
 
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.RobotModeTriggers;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
-
-import frc.robot.subsystems.*;
+import frc.robot.Commands.IntakeIn;
+import frc.robot.Commands.IntakeInter;
+import frc.robot.Commands.IntakeOut;
+import frc.robot.Commands.IntakeReverse;
+import frc.robot.Commands.IntakeSpinWheels;
+import frc.robot.Commands.IntakeStopWheels;
+import frc.robot.Commands.SpindexerDrive;
+import frc.robot.Commands.SpindexerStop;
+import frc.robot.Commands.UptakeStop;
+import frc.robot.Commands.UptakeUp;
+import frc.robot.generated.TunerConstants;
+import frc.robot.subsystems.CommandSwerveDrivetrain;
+import frc.robot.subsystems.Intake;
+import frc.robot.subsystems.Spindexer;
+import frc.robot.subsystems.Turret;
+import frc.robot.subsystems.Uptake;
+import frc.robot.subsystems.Vision;
 
 public class RobotContainer {
   /* Path follower */
@@ -76,16 +86,30 @@ public class RobotContainer {
     CommandScheduler.getInstance().schedule(FollowPathCommand.warmupCommand());
   }
 
+  private double driveCurve(double input)
+  {
+    return 0.75 * Math.pow(input, 3) + 0.25 * input;
+  }
+
   private void configureBindings() {
 
     //Drive Controls
+   // m_Drive.setDefaultCommand(
+   //     m_Drive.manualDriveCommand(
+   //         () -> -m_DriverController.getLeftY(), // Forward is negative Y
+   //         () -> -m_DriverController.getLeftX(), // Left is negative X
+   //         () -> -m_DriverController.getRightX(), // CCW is negative X
+   //         MaxSpeed,
+   //         MaxAngularRate
+   //     )
+   // );
+
     m_Drive.setDefaultCommand(
-        m_Drive.manualDriveCommand(
-            () -> -m_DriverController.getLeftY(), // Forward is negative Y
-            () -> -m_DriverController.getLeftX(), // Left is negative X
-            () -> -m_DriverController.getRightX(), // CCW is negative X
-            MaxSpeed,
-            MaxAngularRate
+        // Drivetrain will execute this command periodically
+        m_Drive.applyRequest(() ->
+            drive.withVelocityX(-driveCurve(m_DriverController.getLeftY())* MaxSpeed) // Drive forward with negative Y (forward)
+                .withVelocityY(-driveCurve(m_DriverController.getLeftX())* MaxSpeed) // Drive left with negative X (left)
+                .withRotationalRate(-driveCurve(m_DriverController.getRightX()) * MaxAngularRate) // Drive counterclockwise with negative X (left)
         )
     );
 
@@ -130,6 +154,11 @@ public class RobotContainer {
     m_DriverController.rightTrigger(.5)
     .toggleOnFalse(new SpindexerStop(m_Spindexer)
     .alongWith(new UptakeStop(m_Uptake)));
+
+    new Trigger(m_intake.overCurrent()).onTrue(
+      new IntakeReverse(m_intake)
+      .andThen(new WaitCommand(1))
+      .andThen(new IntakeSpinWheels(m_intake)));
   }
 
   public Command getAutonomousCommand() {

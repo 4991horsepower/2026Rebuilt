@@ -3,7 +3,11 @@ package frc.robot.subsystems;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.IntakeConstants;
+import frc.robot.Constants.ShooterConstants;
+
+import java.util.function.BooleanSupplier;
 
 import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
 import com.ctre.phoenix6.configs.MotorOutputConfigs;
@@ -63,10 +67,10 @@ public class Intake extends SubsystemBase {
 
         m_CurrentConfig = new TalonFXConfiguration()
         .withCurrentLimits(new CurrentLimitsConfigs()
-        .withStatorCurrentLimit(60)
-        .withStatorCurrentLimitEnable(true)
-        .withSupplyCurrentLimit(30)
-        .withSupplyCurrentLimitEnable(true)
+        .withStatorCurrentLimit(120)
+        .withStatorCurrentLimitEnable(false)
+        .withSupplyCurrentLimit(40)
+        .withSupplyCurrentLimitEnable(false)
         )
         .withSlot0(m_InConfigs)
         .withMotorOutput(new MotorOutputConfigs()
@@ -91,7 +95,6 @@ public class Intake extends SubsystemBase {
             IntakeConstants.linkI,
             IntakeConstants.linkD
         );
-
         m_InConfigurator.apply(m_CurrentConfig);
         m_Linear.configure(m_LinearConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
     }
@@ -138,5 +141,11 @@ public class Intake extends SubsystemBase {
 
     public boolean getDone(){
         return  true;
+    }
+
+    public BooleanSupplier overCurrent(){
+  return () -> {
+            return m_InMotor.getSupplyCurrent().getValueAsDouble() > 20;
+        };
     }
 }
