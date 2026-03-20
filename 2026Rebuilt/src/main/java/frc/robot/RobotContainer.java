@@ -155,11 +155,17 @@ public class RobotContainer {
     .toggleOnFalse(new SpindexerStop(m_Spindexer)
     .alongWith(new UptakeStop(m_Uptake)));
 
-    new Trigger(m_intake.overCurrent()).onTrue(
+    /*new Trigger(m_intake.overCurrent()).onTrue(
       new IntakeReverse(m_intake)
-      .andThen(new WaitCommand(1))
+      .andThen(new WaitCommand(2))
+      .andThen(new IntakeSpinWheels(m_intake)));
+*/
+    m_DriverController.pov(180).onTrue(new IntakeReverse(m_intake)
+      .andThen(new WaitCommand(2))
       .andThen(new IntakeSpinWheels(m_intake)));
   }
+
+  
 
   public Command getAutonomousCommand() {
     return autoChooser.getSelected();

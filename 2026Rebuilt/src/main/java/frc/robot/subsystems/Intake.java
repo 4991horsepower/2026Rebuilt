@@ -53,6 +53,8 @@ public class Intake extends SubsystemBase {
     
     private boolean wasResetByLimit = false;
 
+    private double m_ocTime = 0;
+
     public Intake(){
         m_InMotor = new TalonFX(IntakeConstants.intakeCANID, "Default Name");
 
@@ -145,7 +147,15 @@ public class Intake extends SubsystemBase {
 
     public BooleanSupplier overCurrent(){
   return () -> {
-            return m_InMotor.getSupplyCurrent().getValueAsDouble() > 20;
+            if( m_InMotor.getSupplyCurrent().getValueAsDouble() > 45)
+            {
+                m_ocTime += 0.2;
+            }
+            else
+            {
+                m_ocTime = 0;
+            }
+            return m_InMotor.getSupplyCurrent().getValueAsDouble() > 45 && m_ocTime > 2.0;
         };
     }
 }
