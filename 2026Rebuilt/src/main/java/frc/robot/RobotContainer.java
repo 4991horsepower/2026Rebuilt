@@ -65,6 +65,8 @@ public class RobotContainer {
     NamedCommands.registerCommand("Internal In", new SpindexerDrive(m_Spindexer).alongWith(new UptakeUp(m_Uptake)));
     NamedCommands.registerCommand("Intake Inter", new IntakeInter(m_intake));
     NamedCommands.registerCommand("Internal Stop", new SpindexerStop(m_Spindexer).alongWith(new UptakeStop(m_Uptake)));
+    NamedCommands.registerCommand("Intake Stop", new IntakeStopWheels(m_intake));
+    NamedCommands.registerCommand("Intake Spin", new IntakeSpinWheels(m_intake));
 
     configureBindings();
     autoChooser = AutoBuilder.buildAutoChooser();

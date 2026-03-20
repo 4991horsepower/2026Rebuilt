@@ -3,32 +3,37 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 3.568232502965599,
-        "y": 0.6404744958481603
+        "x": 2.2878884934756827,
+        "y": 3.642289442467378
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.3992618163964305,
-        "y": 0.9303664757775307
+        "x": 3.021287878787879,
+        "y": 5.048200757575757
       },
       "isLocked": false,
-      "linkedName": "RightStart"
+      "linkedName": "Mid Shooting Pos"
     },
     {
       "anchor": {
-        "x": 0.7374337121212122,
-        "y": 0.6632007575757564
+        "x": 0.7872632575757579,
+        "y": 5.330568181818182
       },
       "prevControl": {
-        "x": 2.4354168610956304,
-        "y": 1.5331629862651075
+        "x": 2.3153693181818182,
+        "y": 4.931931818181818
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "Player"
+      "linkedName": "Center Depot"
     }
   ],
-  "rotationTargets": [],
+  "rotationTargets": [
+    {
+      "waypointRelativePos": 0.7021276595744718,
+      "rotationDegrees": 138.49902059728063
+    }
+  ],
   "constraintZones": [],
   "pointTowardsZones": [],
   "eventMarkers": [],
@@ -42,13 +47,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 180.0
+    "rotation": 138.27048792318357
   },
   "reversed": false,
-  "folder": "Right Paths",
+  "folder": "Mid Paths",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": 0.0
+    "rotation": 90.0
   },
   "useDefaultConstraints": true
 }

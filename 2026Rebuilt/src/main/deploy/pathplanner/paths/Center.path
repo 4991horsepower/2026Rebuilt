@@ -3,13 +3,13 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 3.5694128787878787,
-        "y": 2.8473958333333336
+        "x": 3.6358522727272726,
+        "y": 3.0051893939393937
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.7440845535891745,
-        "y": 3.361591201871818
+        "x": 2.7472253787878786,
+        "y": 3.1712878787878784
       },
       "isLocked": false,
       "linkedName": null
@@ -25,7 +25,7 @@
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "Mid Shooting Pos"
     }
   ],
   "rotationTargets": [],
@@ -42,10 +42,10 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 0.0
+    "rotation": 90.0
   },
   "reversed": false,
-  "folder": null,
+  "folder": "Mid Paths",
   "idealStartingState": {
     "velocity": 0,
     "rotation": 0.0
