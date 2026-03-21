@@ -209,16 +209,16 @@ public class Turret extends SubsystemBase {
                 //set wall side based on Robot Y
                 if(robot_pose.getY() > AimingConstants.Blue.midFieldSplit){
                     target = AimingConstants.Blue.leftWall;
-                    setHoodAngle(6);
+                    //setHoodAngle(6);
                 }
                 else{
                     target = AimingConstants.Blue.rightWall;
-                    setHoodAngle(6);
+                    //setHoodAngle(6);
                 }
             }
             else{
                 target = AimingConstants.Blue.hub;
-                setHoodAngle(0);
+                //setHoodAngle(0);
             }
           } 
 
@@ -236,16 +236,25 @@ public class Turret extends SubsystemBase {
         //Get angle to target
         m_RobotThetaToTarget = new Rotation2d(Math.atan2(m_TurretPosition.getY() , m_TurretPosition.getX()));
 
-        setTurretAngle(m_RobotThetaToTarget.getRotations());
+
+        //Locks turret until reading within allowed Area
+        if(Math.abs(getTurretAngle()) > .5){
+            resetTurret();
+            System.out.println("Turret Over Angle");}
+
+        else{
+            setTurretAngle(m_RobotThetaToTarget.getRotations());
+        }
 
         distance = Math.sqrt(Math.pow(m_TurretPosition.getX(), 2) +  Math.pow(m_TurretPosition.getY(), 2));
 
-        if(shooterOn && aimedAtTarget){
+        if(shooterOn){
             setShooterSpeed(aimingData.getShotSpeed(distance));
         }
         else if(!shooterOn){
             setShooterSpeed(0);
         }
+
 
 
         SmartDashboard.putNumber("Distance To Target", distance);

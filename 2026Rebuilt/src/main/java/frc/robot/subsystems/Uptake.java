@@ -3,7 +3,9 @@ package frc.robot.subsystems;
 import com.ctre.phoenix6.configs.TalonFXConfigurator;
 import com.ctre.phoenix6.controls.VelocityTorqueCurrentFOC;
 import com.ctre.phoenix6.hardware.TalonFX;
+import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
 import com.ctre.phoenix6.configs.SlotConfigs;
+import com.ctre.phoenix6.configs.TalonFXConfiguration;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.UptakeConstants;
@@ -14,6 +16,8 @@ public class Uptake extends SubsystemBase {
 
     private final SlotConfigs m_UptakeConfig;
 
+    private final TalonFXConfiguration m_Config;
+
     private VelocityTorqueCurrentFOC speedRequest;
 
     private double setSpeed = 0;
@@ -22,6 +26,13 @@ public class Uptake extends SubsystemBase {
         m_Uptake = new TalonFX(UptakeConstants.upCANID,"Default Name");
 
         m_UptakeConfigurator = m_Uptake.getConfigurator();
+
+        m_Config = new TalonFXConfiguration()
+        .withCurrentLimits(new CurrentLimitsConfigs()
+        .withStatorCurrentLimit(60)
+        .withStatorCurrentLimitEnable(true)
+        .withSupplyCurrentLimit(30)
+        .withSupplyCurrentLimitEnable(true));
 
         m_UptakeConfig = new SlotConfigs()
             .withKP(UptakeConstants.upkP)
