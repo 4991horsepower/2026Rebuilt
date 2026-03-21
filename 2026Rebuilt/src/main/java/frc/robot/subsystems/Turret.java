@@ -177,8 +177,8 @@ public class Turret extends SubsystemBase {
         else if (m_Turret.getPosition().getValueAsDouble() > .5){
              m_Turret.setPosition(m_Turret.getPosition().getValueAsDouble() - 1);
         }
-
-    setHoodAngle(setHoodAngle);
+        resetTurret();
+        setHoodAngle(setHoodAngle);
     }
 
     public void periodic(){
