@@ -115,7 +115,8 @@ public class Turret extends SubsystemBase {
         .withStatorCurrentLimit(50)
         .withStatorCurrentLimitEnable(true)
         .withSupplyCurrentLimit(20)
-        .withSupplyCurrentLimitEnable(true))
+        .withSupplyCurrentLimitEnable(true)
+        .withSupplyCurrentLowerLimit(20))
         .withSlot0(m_TurretConfig)
         .withCommutation(new CommutationConfigs().
         withBrushedMotorWiring(BrushedMotorWiringValue.Leads_A_and_C)
@@ -177,8 +178,8 @@ public class Turret extends SubsystemBase {
         else if (m_Turret.getPosition().getValueAsDouble() > .5){
              m_Turret.setPosition(m_Turret.getPosition().getValueAsDouble() - 1);
         }
-        resetTurret();
-        setHoodAngle(setHoodAngle);
+        //resetTurret();
+        //setHoodAngle(setHoodAngle);
     }
 
     public void periodic(){
@@ -238,12 +239,12 @@ public class Turret extends SubsystemBase {
 
 
         //Locks turret until reading within allowed Area
-        if(Math.abs(getTurretAngle()) > .5){
+        if(Math.abs(m_Turret.getPosition().getValueAsDouble()) > .5){
             resetTurret();
             System.out.println("Turret Over Angle");}
 
         else{
-            setTurretAngle(m_RobotThetaToTarget.getRotations());
+            //setTurretAngle(m_RobotThetaToTarget.getRotations());
         }
 
         distance = Math.sqrt(Math.pow(m_TurretPosition.getX(), 2) +  Math.pow(m_TurretPosition.getY(), 2));

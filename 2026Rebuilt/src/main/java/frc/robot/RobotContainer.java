@@ -58,7 +58,7 @@ public class RobotContainer {
   CommandXboxController m_DriverController = new CommandXboxController(0);
 
   private final CommandSwerveDrivetrain m_Drive = TunerConstants.createDrivetrain();
-  private final Intake m_intake = new Intake();
+  //private final Intake m_intake = new Intake();
   private final Spindexer m_Spindexer = new Spindexer();
   private final Uptake m_Uptake = new Uptake();
   private final Turret m_Turret = new Turret(m_Drive.getPoseSupplier(), m_Drive.getVelocitySupplier());
@@ -71,12 +71,12 @@ public class RobotContainer {
         m_Turret.updateSignals();
         m_Vision.addBufferSample(state.Timestamp, m_Turret.getTurretAngle());
     });
-    NamedCommands.registerCommand("Intake Out", new IntakeOut(m_intake));
+    //NamedCommands.registerCommand("Intake Out", new IntakeOut(m_intake));
     NamedCommands.registerCommand("Internal In", new SpindexerDrive(m_Spindexer).alongWith(new UptakeUp(m_Uptake)));
-    NamedCommands.registerCommand("Intake Inter", new IntakeInter(m_intake));
+    //NamedCommands.registerCommand("Intake Inter", new IntakeInter(m_intake));
     NamedCommands.registerCommand("Internal Stop", new SpindexerStop(m_Spindexer).alongWith(new UptakeStop(m_Uptake)));
-    NamedCommands.registerCommand("Intake Stop", new IntakeStopWheels(m_intake));
-    NamedCommands.registerCommand("Intake Spin", new IntakeSpinWheels(m_intake));
+    //NamedCommands.registerCommand("Intake Stop", new IntakeStopWheels(m_intake));
+    //NamedCommands.registerCommand("Intake Spin", new IntakeSpinWheels(m_intake));
 
     configureBindings();
     autoChooser = AutoBuilder.buildAutoChooser();
@@ -134,35 +134,35 @@ public class RobotContainer {
     m_DriverController.x().onTrue(new InstantCommand(()->cancelAllCommands()));
 
     //Intake Controls
-    m_DriverController.rightBumper().onTrue(new IntakeOut(m_intake));
-    m_DriverController.leftBumper().onTrue(new IntakeIn(m_intake));
-    m_DriverController.back().onTrue(m_intake.runOnce(() -> m_intake.homeIntake()));
-    m_DriverController.y().onTrue(new IntakeInter(m_intake));
-    m_DriverController.b().onTrue(new InstantCommand(() -> m_intake.stopWheels()));
+    //m_DriverController.rightBumper().onTrue(new IntakeOut(m_intake));
+    //m_DriverController.leftBumper().onTrue(new IntakeIn(m_intake));
+    //m_DriverController.back().onTrue(m_intake.runOnce(() -> m_intake.homeIntake()));
+    //m_DriverController.y().onTrue(new IntakeInter(m_intake));
+    //m_DriverController.b().onTrue(new InstantCommand(() -> m_intake.stopWheels()));
 
     //Shooter Controls
     m_DriverController.start().onTrue(new InstantCommand(() -> m_Turret.toggleShooter()));
 
     //While trigger is held fire balls
-    m_DriverController.rightTrigger(.5)
+    /*m_DriverController.rightTrigger(.5)
     .and(m_Turret.isShooterAtSpeed())
     .onTrue(new UptakeUp(m_Uptake)
     .andThen(new SpindexerDrive(m_Spindexer))
     );
-
+*/
     //While trigger is not held stop spindex and uptake
     m_DriverController.rightTrigger(.5)
     .toggleOnFalse(new SpindexerStop(m_Spindexer)
     .alongWith(new UptakeStop(m_Uptake)));
-
-    /*new Trigger(m_intake.overCurrent()).onTrue(
+/*
+    new Trigger(m_intake.overCurrent()).onTrue(
       new IntakeReverse(m_intake)
       .andThen(new WaitCommand(2))
       .andThen(new IntakeSpinWheels(m_intake)));
-*/
+
     m_DriverController.pov(180).onTrue(new IntakeReverse(m_intake)
       .andThen(new WaitCommand(2))
-      .andThen(new IntakeSpinWheels(m_intake)));
+      .andThen(new IntakeSpinWheels(m_intake))); */
   }
 
   
