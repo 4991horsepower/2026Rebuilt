@@ -94,24 +94,24 @@ public class RobotContainer {
   private void configureBindings() {
 
     //Drive Controls
-   // m_Drive.setDefaultCommand(
-   //     m_Drive.manualDriveCommand(
-   //         () -> -m_DriverController.getLeftY(), // Forward is negative Y
-   //         () -> -m_DriverController.getLeftX(), // Left is negative X
-   //         () -> -m_DriverController.getRightX(), // CCW is negative X
-   //         MaxSpeed,
-   //         MaxAngularRate
-   //     )
-   // );
-
     m_Drive.setDefaultCommand(
-        // Drivetrain will execute this command periodically
-        m_Drive.applyRequest(() ->
-            drive.withVelocityX(-driveCurve(m_DriverController.getLeftY())* MaxSpeed) // Drive forward with negative Y (forward)
-                .withVelocityY(-driveCurve(m_DriverController.getLeftX())* MaxSpeed) // Drive left with negative X (left)
-                .withRotationalRate(-driveCurve(m_DriverController.getRightX()) * MaxAngularRate) // Drive counterclockwise with negative X (left)
+        m_Drive.manualDriveCommand(
+            () -> -m_DriverController.getLeftY(), // Forward is negative Y
+            () -> -m_DriverController.getLeftX(), // Left is negative X
+            () -> -m_DriverController.getRightX(), // CCW is negative X
+            MaxSpeed,
+            MaxAngularRate
         )
     );
+
+    //m_Drive.setDefaultCommand(
+    //    // Drivetrain will execute this command periodically
+    //    m_Drive.applyRequest(() ->
+    //        drive.withVelocityX(-driveCurve(m_DriverController.getLeftY())* MaxSpeed) // Drive forward with negative Y (forward)
+    //            .withVelocityY(-driveCurve(m_DriverController.getLeftX())* MaxSpeed) // Drive left with negative X (left)
+    //            .withRotationalRate(-driveCurve(m_DriverController.getRightX()) * MaxAngularRate) // Drive counterclockwise with negative X (left)
+    //    )
+    //);
 
     // Idle while the robot is disabled. This ensures the configured
     // neutral mode is applied to the drive motors while disabled.

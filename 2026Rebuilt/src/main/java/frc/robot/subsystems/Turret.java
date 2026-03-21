@@ -103,7 +103,7 @@ public class Turret extends SubsystemBase {
 
         ExternalFeedbackConfigs m_EncoderConfig = new ExternalFeedbackConfigs()
         .withExternalFeedbackSensorSource(ExternalFeedbackSensorSourceValue.PulseWidth)
-        .withAbsoluteSensorOffset(0.027588);
+        .withAbsoluteSensorOffset(.267822);
 
         m_TurretConfig = new Slot0Configs()
         .withKP(TurretConstants.turretkP)
