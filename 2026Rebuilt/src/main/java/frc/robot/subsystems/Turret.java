@@ -112,9 +112,9 @@ public class Turret extends SubsystemBase {
 
         m_TurretCurrentConfig = new TalonFXSConfiguration()
         .withCurrentLimits(new CurrentLimitsConfigs()
-        .withStatorCurrentLimit(60)
+        .withStatorCurrentLimit(50)
         .withStatorCurrentLimitEnable(true)
-        .withSupplyCurrentLimit(30)
+        .withSupplyCurrentLimit(20)
         .withSupplyCurrentLimitEnable(true))
         .withSlot0(m_TurretConfig)
         .withCommutation(new CommutationConfigs().
