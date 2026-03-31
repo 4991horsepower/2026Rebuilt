@@ -88,7 +88,7 @@ public class Turret extends SubsystemBase {
     private PositionTorqueCurrentFOC positionRequest; 
     private VelocityTorqueCurrentFOC speedRequest;
 
-    private boolean shooterOn = true;
+    private boolean shooterOn = false;
     private boolean aimedAtTarget = true;
 
     private final AimingData aimingData = new AimingData();
@@ -103,7 +103,7 @@ public class Turret extends SubsystemBase {
 
         ExternalFeedbackConfigs m_EncoderConfig = new ExternalFeedbackConfigs()
         .withExternalFeedbackSensorSource(ExternalFeedbackSensorSourceValue.PulseWidth)
-        .withAbsoluteSensorOffset(.267822);
+        .withAbsoluteSensorOffset(.008057);
 
         m_TurretConfig = new Slot0Configs()
         .withKP(TurretConstants.turretkP)
@@ -165,8 +165,6 @@ public class Turret extends SubsystemBase {
         m_WheelConfigurator.apply(m_wheelConfigs);
 
         if(DebugConstants.Shooter.DebugEnable){
-            SmartDashboard.putNumber("Commanded Hood Angle", setHoodAngle);
-            SmartDashboard.putNumber("Actual Hood Angle", m_Hood.getPosition().getValueAsDouble());
 
             SmartDashboard.putNumber("Commanded Shooter Speed",setShooterSpeed);
             SmartDashboard.putNumber("Actual Shooter Speed", m_Wheel.getVelocity().getValueAsDouble());
@@ -178,8 +176,8 @@ public class Turret extends SubsystemBase {
         else if (m_Turret.getPosition().getValueAsDouble() > .5){
              m_Turret.setPosition(m_Turret.getPosition().getValueAsDouble() - 1);
         }
-        //resetTurret();
-        //setHoodAngle(setHoodAngle);
+        resetTurret();
+        setHoodAngle(0);
     }
 
     public void periodic(){
@@ -192,11 +190,11 @@ public class Turret extends SubsystemBase {
             //set wall side based on Robot Y                    
             if(robot_pose.getY() < AimingConstants.Red.midFieldSplit){
                 target = AimingConstants.Red.leftWall;
-                setHoodAngle(6);
+                //setHoodAngle(6);
             }
             else{
                 target = AimingConstants.Red.rightWall;
-                setHoodAngle(6);
+                //setHoodAngle(6);
                 }
             }
             else{
@@ -219,7 +217,7 @@ public class Turret extends SubsystemBase {
             }
             else{
                 target = AimingConstants.Blue.hub;
-                //setHoodAngle(0);
+                setHoodAngle(0);
             }
           } 
 
@@ -241,10 +239,12 @@ public class Turret extends SubsystemBase {
         //Locks turret until reading within allowed Area
         if(Math.abs(m_Turret.getPosition().getValueAsDouble()) > .5){
             resetTurret();
-            System.out.println("Turret Over Angle");}
+            System.out.println("Turret Over Angle");
+            
+        }
 
         else{
-            //setTurretAngle(m_RobotThetaToTarget.getRotations());
+            setTurretAngle(m_RobotThetaToTarget.getRotations());
         }
 
         distance = Math.sqrt(Math.pow(m_TurretPosition.getX(), 2) +  Math.pow(m_TurretPosition.getY(), 2));
@@ -269,6 +269,8 @@ public class Turret extends SubsystemBase {
         SmartDashboard.putNumber("Turret Angle", getTurretAngle());
         SmartDashboard.putNumber("Target X", target.getX());
         SmartDashboard.putNumber("Target Y", target.getY());
+        SmartDashboard.putNumber("Set Hood Angle", m_Hood.getPosition().getValueAsDouble());
+        SmartDashboard.putNumber("Commanded Hood Angle", setHoodAngle);
     }
 
     public void setTurretAngle(double angle){
